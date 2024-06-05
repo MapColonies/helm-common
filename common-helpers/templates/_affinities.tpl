@@ -43,9 +43,9 @@ Return a nodeAffinity definition
 {{ include "common.affinities.nodes" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
 {{- define "common.affinities.nodes" -}}
-  {{- if eq .type "soft" }}
+  {{- if eq .type "soft" -}}
     {{- include "common.affinities.nodes.soft" . -}}
-  {{- else if eq .type "hard" }}
+  {{- else if eq .type "hard" -}}
     {{- include "common.affinities.nodes.hard" . -}}
   {{- end -}}
 {{- end -}}
@@ -71,9 +71,9 @@ preferredDuringSchedulingIgnoredDuringExecution:
   - podAffinityTerm:
       labelSelector:
         matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" .context )) | nindent 10 }}
-          {{- if not (empty $component) }}
+          {{- if not (empty $component) -}}
           {{ printf "app.kubernetes.io/component: %s" $component }}
-          {{- end }}
+          {{- end -}}
           {{- range $key, $value := $extraMatchLabels }}
           {{ $key }}: {{ $value | quote }}
           {{- end }}
@@ -83,9 +83,9 @@ preferredDuringSchedulingIgnoredDuringExecution:
   - podAffinityTerm:
       labelSelector:
         matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 10 }}
-          {{- if not (empty $component) }}
+          {{- if not (empty $component) -}}
           {{ printf "app.kubernetes.io/component: %s" $component }}
-          {{- end }}
+          {{- end -}}
           {{- range $key, $value := .extraMatchLabels }}
           {{ $key }}: {{ $value | quote }}
           {{- end }}
@@ -116,9 +116,9 @@ requiredDuringSchedulingIgnoredDuringExecution:
   {{- range $extraPodAffinityTerms }}
   - labelSelector:
       matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 8 }}
-        {{- if not (empty $component) }}
+        {{- if not (empty $component) -}}
         {{ printf "app.kubernetes.io/component: %s" $component }}
-        {{- end }}
+        {{- end -}}
         {{- range $key, $value := .extraMatchLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -131,9 +131,9 @@ Return a podAffinity/podAntiAffinity definition
 {{ include "common.affinities.pods" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
 {{- define "common.affinities.pods" -}}
-  {{- if eq .type "soft" }}
+  {{- if eq .type "soft" -}}
     {{- include "common.affinities.pods.soft" . -}}
-  {{- else if eq .type "hard" }}
+  {{- else if eq .type "hard" -}}
     {{- include "common.affinities.pods.hard" . -}}
   {{- end -}}
 {{- end -}}

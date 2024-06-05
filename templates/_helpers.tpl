@@ -63,3 +63,10 @@ Compile all warnings into a single message.
 {{-   printf "\nVALUES VALIDATION:\n%s" $message -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Returns the environment from global
+*/}}
+{{- define "tplHelpers.environment" -}}
+{{- .Values.global.environment -}}
+{{- end -}}
