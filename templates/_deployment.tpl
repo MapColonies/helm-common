@@ -15,7 +15,7 @@ metadata:
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
-    mapcolonies.io/environment: {{ template "tplHelpers.environment" $context }}
+    {{- include "mc.labels.standard" ( dict "context" $context ) | nindent 4 }}
   {{- if or $MAIN_OBJECT_BLOCK.deploymentAnnotations $context.Values.commonAnnotations }}
   {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $MAIN_OBJECT_BLOCK.deploymentAnnotations $context.Values.commonAnnotations) "context" $context) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}
@@ -31,6 +31,7 @@ spec:
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $context ) | nindent 6 }}
       app.kubernetes.io/component: {{ $COMPONENT_NAME }}
+      {{- include "mc.labels.matchLabels" ( dict "context" $context ) | nindent 6 }}
   template:
     metadata:
       {{- if $MAIN_OBJECT_BLOCK.podAnnotations.enabled }}
@@ -128,8 +129,6 @@ spec:
           env:
             - name: MC_DEBUG
               value: {{ ternary "true" "false" (or $MAIN_OBJECT_BLOCK.image.debug $context.Values.diagnosticMode.enabled) | quote }}
-            - name: foo
-              value: bar
             {{- if $MAIN_OBJECT_BLOCK.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.extraEnvVars "context" $context) | nindent 12 }}
             {{- end }}
@@ -157,19 +156,19 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.customLivenessProbe "context" $context) | nindent 12 }}
           {{- else if $MAIN_OBJECT_BLOCK.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit $MAIN_OBJECT_BLOCK.livenessProbe "enabled") "context" $context) | nindent 12 }}
-            %%httpGet || command || etc%%
+            {{- include "tplHelpers.probe.httpGet" (dict "PROBE_PATH" "liveness") | nindent 12 }}
           {{- end }}
           {{- if $MAIN_OBJECT_BLOCK.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.customReadinessProbe "context" $context) | nindent 12 }}
           {{- else if $MAIN_OBJECT_BLOCK.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit $MAIN_OBJECT_BLOCK.readinessProbe "enabled") "context" $context) | nindent 12 }}
-            %%httpGet || command || etc%%
+            {{- include "tplHelpers.probe.httpGet" (dict "PROBE_PATH" "liveness") | nindent 12 }}
           {{- end }}
           {{- if $MAIN_OBJECT_BLOCK.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.customStartupProbe "context" $context) | nindent 12 }}
           {{- else if $MAIN_OBJECT_BLOCK.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit $MAIN_OBJECT_BLOCK.startupProbe "enabled") "context" $context) | nindent 12 }}
-            %%httpGet || command || etc%%
+            {{- include "tplHelpers.probe.httpGet" (dict "PROBE_PATH" "liveness") | nindent 12 }}
           {{- end }}
           {{- end }}
           {{- if $MAIN_OBJECT_BLOCK.lifecycleHooks }}

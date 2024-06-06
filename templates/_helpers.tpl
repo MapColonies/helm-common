@@ -70,3 +70,13 @@ Returns the environment from global
 {{- define "tplHelpers.environment" -}}
 {{- .Values.global.environment -}}
 {{- end -}}
+
+{{/*
+Returns probe httpGet 
+*/}}
+{{- define "tplHelpers.probe.httpGet" -}}
+{{- $PROBE_PATH := .PROBE_PATH | default "liveness" -}}
+httpGet:
+  path: /{{ $PROBE_PATH }}
+  port: http
+{{- end -}}
