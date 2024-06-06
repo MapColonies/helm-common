@@ -19,7 +19,7 @@ Return the proper image name
 {{- if $registryName }}
     {{- printf "%s/%s%s%s" $registryName $repositoryName $separator $termination -}}
 {{- else -}}
-    {{- printf "%s%s%s"  $repositoryName $separator $termination -}}
+    {{- printf "%s%s%s" $repositoryName $separator $termination -}}
 {{- end -}}
 {{- end -}}
 
@@ -52,12 +52,12 @@ Return the proper Docker Image Registry Secret Names evaluating values as templa
     {{- end -}}
   {{- end -}}
 
-  {{- if (not (empty $pullSecrets)) }}
+  {{- if (not (empty $pullSecrets)) -}}
 imagePullSecrets:
     {{- range $pullSecrets | uniq }}
   - name: {{ . }}
     {{- end }}
-  {{- end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*
