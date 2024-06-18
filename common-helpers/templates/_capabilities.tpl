@@ -219,3 +219,10 @@ This check is introduced as a regexMatch instead of {{ if .Capabilities.HelmVers
   {{- true -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the appropriate apiVersion for configmap.
+*/}}
+{{- define "common.capabilities.configmap.apiVersion" -}}
+{{- print "v1" -}}
+{{- end -}}
