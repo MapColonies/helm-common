@@ -102,6 +102,29 @@ Return the appropriate apiVersion for ingress.
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for route.
+*/}}
+{{- define "common.capabilities.route.apiVersion" -}}
+{{- if .Values.route -}}
+{{- if .Values.route.apiVersion -}}
+{{- .Values.route.apiVersion -}}
+{{- else if semverCompare "<1.14-0" (include "common.capabilities.kubeVersion" .) -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" (include "common.capabilities.kubeVersion" .) -}}
+{{- print "route.openshift.io/v1beta1" -}}
+{{- else -}}
+{{- print "route.openshift.io/v1" -}}
+{{- end }}
+{{- else if semverCompare "<1.14-0" (include "common.capabilities.kubeVersion" .) -}}
+{{- print "extensions/v1beta1" -}}
+{{- else if semverCompare "<1.19-0" (include "common.capabilities.kubeVersion" .) -}}
+{{- print "route.openshift.io/v1beta1" -}}
+{{- else -}}
+{{- print "route.openshift.io/v1" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return the appropriate apiVersion for RBAC resources.
 */}}
 {{- define "common.capabilities.rbac.apiVersion" -}}
