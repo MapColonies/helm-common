@@ -7,7 +7,7 @@ mapcolonies.io/environment: {{ template "tplHelpers.environment" .context }}
 {{- if .context.Values.global.owner }}
 mapcolonies.io/owner: {{ .context.Values.global.owner | quote }}
 {{- end }}
-mapcolonies.io/release-version: {{ .context.Values.global.releaseVersion | default .context.Chart.AppVersion | quote }}
+mapcolonies.io/release-version: {{ include "common.tplvalues.getGlobalValue" (dict "propName" "releaseVersion" "context" .context) | default .context.Chart.AppVersion | quote }}
 {{- end -}}
 
 {{/*
