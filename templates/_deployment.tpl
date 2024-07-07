@@ -39,9 +39,16 @@ spec:
         {{- if $MAIN_OBJECT_BLOCK.podAnnotations.resetOnConfigChange }}
         checksum/configmap: {{ include (print $context.Template.BasePath "/configmap.yaml") $context | sha256sum }}
         {{- end }}
-        {{- if $MAIN_OBJECT_BLOCK.metrics.enabled }}
-        prometheus.io/port: {{ $MAIN_OBJECT_BLOCK.metrics.prometheus.port | quote }}
-        prometheus.io/scrape: {{ $MAIN_OBJECT_BLOCK.metrics.prometheus.scrape | quote }}
+        {{- if $MAIN_OBJECT_BLOCK.prometheus.scrape }}
+        prometheus.io/scrape: {{ $MAIN_OBJECT_BLOCK.prometheus.scrape | quote }}
+        prometheus.io/port: {{ $MAIN_OBJECT_BLOCK.prometheus.port | quote }}
+        prometheus.io/path: {{ $MAIN_OBJECT_BLOCK.prometheus.path | quote }}
+        prometheus.io/scheme: {{ $MAIN_OBJECT_BLOCK.prometheus.scheme | quote }}
+        {{- range $idx, $obj := $MAIN_OBJECT_BLOCK.prometheus.params }}
+        {{- range $key, $val := $obj }}
+        prometheus.io/param_{{ $key }}: {{ $val | quote }}
+        {{- end }}
+        {{- end }}
         {{- end }}
         {{- if $MAIN_OBJECT_BLOCK.podAnnotations.annotations }}
         {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.podAnnotations.annotations "context" $context) | nindent 8 }}

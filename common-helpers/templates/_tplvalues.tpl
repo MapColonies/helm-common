@@ -73,3 +73,49 @@ Usage:
 {{- $GLOBAL_RESOLVED := default $GLOBAL (default $GLOBAL_OVERRIDE (default $UMBRELLA_GLOBAL_OVERRIDE $CHART_GLOBAL_OVERRIDE) ) -}}
 {{- printf "%s" $GLOBAL_RESOLVED -}}
 {{- end -}}
+
+{{/*
+Get global object according to MapColonies(MC) override principles (see above)
+*/}}
+{{- define "common.tplvalues.getGlobalObject" -}}
+{{- $objName := .objName }}
+{{- $context := .context }}
+{{- $CURRENT_SUB_CHART := $context.Values.global.currentSubChart -}}
+{{- $CURRENT_CHART := $context.Chart.Name -}}
+{{- $CHART_GLOBAL_OVERRIDE := include "common.tplvalues.getObject" (dict "path" (printf "%s.%s.%s.%s" $CURRENT_SUB_CHART $CURRENT_CHART "overrideGlobal" $objName) "context" $context.Values.global) -}}
+{{- $UMBRELLA_GLOBAL_OVERRIDE := include "common.tplvalues.getObject" (dict "path" (printf "%s.%s.%s" $CURRENT_SUB_CHART "overrideGlobal" $objName) "context" $context.Values.global) -}}
+{{- $GLOBAL_OVERRIDE := include "common.tplvalues.getObject" (dict "path" (printf "%s.%s" "overrideGlobal" $objName) "context" $context.Values.global) -}}
+{{- $GLOBAL := include "common.tplvalues.getObject" (dict "path" (printf "%s." $objName) "context" $context.Values.global) -}}
+{{- $GLOBAL_RESOLVED := "" -}}
+
+{{- if fromYaml $CHART_GLOBAL_OVERRIDE }}
+{{- $GLOBAL_RESOLVED = $CHART_GLOBAL_OVERRIDE }}
+{{- else if fromYaml $UMBRELLA_GLOBAL_OVERRIDE }}
+{{- $GLOBAL_RESOLVED = $UMBRELLA_GLOBAL_OVERRIDE }}
+{{- else if fromYaml $GLOBAL_OVERRIDE }}
+{{- $GLOBAL_RESOLVED = $GLOBAL_OVERRIDE }}
+{{- else }}
+{{- $GLOBAL_RESOLVED = $GLOBAL }}
+{{- end }}
+{{- $GLOBAL_RESOLVED }}
+{{- end -}}
+
+{{/*
+Get object according by path(string)
+Usage:
+  {{ include "common.tplvalues.getObject" (dict "path" "global.serving" "context" .Values) }}
+*/}}
+{{- define "common.tplvalues.getObject" -}}
+{{- $path := .path }}
+{{- $context := .context }}
+{{- $pathParts := split "." $path }}
+{{- $value := $context }}
+{{- if $context }}
+{{- range $pathParts }}
+  {{- if . }}
+  {{- $value = index $value . }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- $value | toYaml }}
+{{- end -}}

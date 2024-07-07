@@ -14,6 +14,7 @@ metadata:
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
+    {{- include "mc.labels.standard" ( dict "context" $context ) | nindent 4 }}
   {{- if or $context.Values.ingress.annotations $context.Values.commonAnnotations }}
   {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $context.Values.ingress.annotations $context.Values.commonAnnotations) "context" $context) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}

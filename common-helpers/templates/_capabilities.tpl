@@ -249,3 +249,10 @@ Return the appropriate apiVersion for configmap.
 {{- define "common.capabilities.configmap.apiVersion" -}}
 {{- print "v1" -}}
 {{- end -}}
+
+{{/*
+Return the appropriate apiVersion for service.
+*/}}
+{{- define "common.capabilities.service.apiVersion" -}}
+{{- print "v1" -}}
+{{- end -}}

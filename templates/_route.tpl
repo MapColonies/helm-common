@@ -14,6 +14,7 @@ metadata:
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
+    {{- include "mc.labels.standard" ( dict "context" $context ) | nindent 4 }}
   {{- if or $context.Values.route.annotations $context.Values.commonAnnotations }}
   {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $context.Values.route.annotations $context.Values.commonAnnotations) "context" $context) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}
@@ -26,7 +27,7 @@ spec:
     name: {{ include "common.names.fullname" $context }}
   port:
     targetPort: {{ $context.Values.route.targetPort }}
-  {{- if $context.Values.route.tls }}
+  {{- if $context.Values.route.tls.enabled }}
   tls:
     termination: {{ $context.Values.route.tls.termination }}
     insecureEdgeTerminationPolicy: {{ $context.Values.route.tls.insecureEdgeTerminationPolicy }}
