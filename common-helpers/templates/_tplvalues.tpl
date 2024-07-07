@@ -112,7 +112,7 @@ Usage:
 {{- $value := $context }}
 {{- if $context }}
 {{- range $pathParts }}
-  {{- if . }}
+  {{- if and $value . }}
   {{- $value = index $value . }}
   {{- end }}
 {{- end }}
