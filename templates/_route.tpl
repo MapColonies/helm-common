@@ -18,10 +18,15 @@ metadata:
   {{- if or $context.Values.route.annotations $context.Values.commonAnnotations }}
   {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $context.Values.route.annotations $context.Values.commonAnnotations) "context" $context) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}
+    {{- if $context.Values.route.timeout.enabled }}
+    haproxy.router.openshift.io/timeout: {{ $context.Values.route.timeout.duration }}
+    {{- end }}
   {{- end }}
 spec:
+  {{- if $context.Values.route.hostname }}
   host: {{ $context.Values.route.hostname }}
-  path: {{ $context.Values.route.path }}
+  {{- end }}
+  path: {{ $context.Values.route.path | default "/"}}
   to:
     kind: Service
     name: {{ include "common.names.fullname" $context }}
@@ -31,9 +36,9 @@ spec:
   tls:
     termination: {{ $context.Values.route.tls.termination }}
     insecureEdgeTerminationPolicy: {{ $context.Values.route.tls.insecureEdgeTerminationPolicy }}
-    key: {{ $context.Values.route.tls.key | quote }}
-    certificate: {{ $context.Values.route.tls.certificate | quote }}
-    caCertificate: {{ $context.Values.route.tls.caCertificate | quote }}
+    {{- if $context.Values.route.tls.useCerts }}
+    {{- include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- if $context.Values.route.extraRules }}
   {{- include "common.tplvalues.render" (dict "value" $context.Values.route.extraRules "context" $context) | nindent 2 }}

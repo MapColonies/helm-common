@@ -25,7 +25,7 @@ Return the proper Docker Image Registry Secret Names
 {{- define "tplHelpers.imagePullSecrets" -}}
 {{- $MAIN_OBJECT_BLOCK := .MAIN_OBJECT_BLOCK -}}
 {{- $context := .context -}}
-{{- include "common.images.renderPullSecrets" (dict "images" (list $MAIN_OBJECT_BLOCK.image $context.Values.volumePermissions.image) "context" $context) -}}
+{{- include "common.images.renderPullSecrets" (dict "images" (list $MAIN_OBJECT_BLOCK.image (ternary $context.Values.volumePermissions.image nil ($context.Values.volumePermissions.enabled))) "context" $context) -}}
 {{- end -}}
 
 {{/*

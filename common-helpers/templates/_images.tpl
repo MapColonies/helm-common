@@ -43,12 +43,14 @@ Return the proper Docker Image Registry Secret Names evaluating values as templa
   {{- end -}}
 
   {{- range .images -}}
+    {{- if . -}}
     {{- range .pullSecrets -}}
       {{- if kindIs "map" . -}}
         {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" .name "context" $context)) -}}
       {{- else -}}
         {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
       {{- end -}}
+    {{- end -}}
     {{- end -}}
   {{- end -}}
 
