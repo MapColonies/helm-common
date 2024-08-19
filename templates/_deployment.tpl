@@ -182,11 +182,13 @@ spec:
           lifecycle: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.lifecycleHooks "context" $context) | nindent 12 }}
           {{- end }}
           volumeMounts:
+            {{- if $context.Values.persistence.enabled }}
             - name: data
               mountPath: {{ $context.Values.persistence.mountPath }}
               {{- if $context.Values.persistence.subPath }}
               subPath: {{ $context.Values.persistence.subPath }}
               {{- end }}
+            {{- end }}
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
@@ -199,12 +201,10 @@ spec:
       volumes:
         - name: empty-dir
           emptyDir: {}
-        - name: data
         {{- if $context.Values.persistence.enabled }}
+        - name: data
           persistentVolumeClaim:
             claimName: {{ default (include "common.names.fullname" $context) $context.Values.persistence.existingClaim }}
-        {{- else }}
-          emptyDir: {}
         {{- end }}
         {{- if $MAIN_OBJECT_BLOCK.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.extraVolumes "context" $context) | nindent 8 }}
