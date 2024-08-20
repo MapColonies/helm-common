@@ -32,7 +32,7 @@ spec:
     kind: Service
     name: {{ include "common.names.fullname" $context }}
   port:
-    targetPort: {{ $MAIN_OBJECT_BLOCK.containerPorts.http }}
+    targetPort: {{ $context.Values.service.ports.http }}
   {{- if $context.Values.route.tls.enabled }}
   tls:
     termination: {{ $context.Values.route.tls.termination }}
