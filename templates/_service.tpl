@@ -40,7 +40,7 @@ spec:
   loadBalancerIP: {{ $context.Values.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - name: HTTP-MAIN-PORT
+    - name: http
       port: {{ $context.Values.service.ports.http }}
       {{- if not (eq $context.Values.service.ports.http $MAIN_OBJECT_BLOCK.containerPorts.http) }}
       targetPort: {{ $MAIN_OBJECT_BLOCK.containerPorts.http }}

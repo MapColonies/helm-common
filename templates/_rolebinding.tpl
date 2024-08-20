@@ -24,5 +24,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "tplHelpers.serviceAccountName" $context }}
+    namespace: {{ include "common.names.namespace" $context | quote }}
 {{- end }}
 {{- end }}
