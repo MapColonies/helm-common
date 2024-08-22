@@ -20,7 +20,9 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}
   {{- end }}
 spec:
+  {{- if $context.Values.service.type }}
   type: {{ $context.Values.service.type }}
+  {{- end }}
   {{- if and $context.Values.service.clusterIP (eq $context.Values.service.type "ClusterIP") }}
   clusterIP: {{ $context.Values.service.clusterIP }}
   {{- end }}

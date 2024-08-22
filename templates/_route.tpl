@@ -5,7 +5,6 @@ USAGE:
 
 {{- define "mc-chart.route" -}}
 {{- $context := .context }}
-{{- $MAIN_OBJECT_BLOCK := get $context.Values .MAIN_OBJECT_BLOCK -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.route.enabled }}
 apiVersion: {{ include "common.capabilities.route.apiVersion" $context }}
@@ -32,11 +31,15 @@ spec:
     kind: Service
     name: {{ include "common.names.fullname" $context }}
   port:
-    targetPort: {{ $context.Values.service.ports.http }}
+    targetPort: {{ $context.Values.route.targetPort }}
   {{- if $context.Values.route.tls.enabled }}
   tls:
+    {{- if $context.Values.route.tls.termination }}
     termination: {{ $context.Values.route.tls.termination }}
+    {{- end }}
+    {{- if $context.Values.route.tls.insecureEdgeTerminationPolicy }}
     insecureEdgeTerminationPolicy: {{ $context.Values.route.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
     {{- if $context.Values.route.tls.useCerts }}
     {{- include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | nindent 4 }}
     {{- end }}
