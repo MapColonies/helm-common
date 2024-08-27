@@ -31,7 +31,6 @@ spec:
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $context ) | nindent 6 }}
       app.kubernetes.io/component: {{ $COMPONENT_NAME }}
-      {{- include "mc.labels.matchLabels" ( dict "context" $context ) | nindent 6 }}
   template:
     metadata:
       {{- if $MAIN_OBJECT_BLOCK.podAnnotations.enabled }}
@@ -56,11 +55,10 @@ spec:
       {{- end }}
       labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $context ) | nindent 8 }}
         app.kubernetes.io/component: {{ $COMPONENT_NAME }}
-        {{- include "mc.labels.matchLabels" ( dict "context" $context ) | nindent 8 }}
     spec:
       {{- include "tplHelpers.imagePullSecrets" ( dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "context" $context ) | nindent 6 }}
       serviceAccountName: {{ template "tplHelpers.serviceAccountName" $context }}
-      automountServiceAccountToken: {{ $MAIN_OBJECT_BLOCK.automountServiceAccountToken }}
+      automountServiceAccountToken: true
       {{- if $MAIN_OBJECT_BLOCK.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.hostAliases "context" $context) | nindent 8 }}
       {{- end }}

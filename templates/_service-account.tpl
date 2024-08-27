@@ -20,6 +20,5 @@ metadata:
   {{- $annotations := include "common.tplvalues.merge" (dict "values" (list $context.Values.serviceAccount.annotations $context.Values.commonAnnotations) "context" $context) }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $context ) | nindent 4 }}
   {{- end }}
-automountServiceAccountToken: {{ $context.Values.serviceAccount.automountServiceAccountToken }}
 {{- end }}
 {{- end }}

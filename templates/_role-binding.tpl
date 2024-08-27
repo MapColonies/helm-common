@@ -1,10 +1,11 @@
 {{/*
 USAGE:
-{{ include "mc-chart.rolebinding" (dict "context" .) }}
+{{ include "mc-chart.roleBinding" (dict "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
 */}}
 
 
-{{- define "mc-chart.rolebinding" -}}
+{{- define "mc-chart.roleBinding" -}}
+{{- $COMPONENT_NAME := .COMPONENT_NAME }}
 {{- $context := .context }}
 {{- if $context.Values.rbac.create }}
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" $context }}
@@ -13,6 +14,7 @@ metadata:
   name: {{ template "common.names.fullname" $context }}
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
+    app.kubernetes.io/component: {{ $COMPONENT_NAME }}
     {{- include "mc.labels.standard" ( dict "context" $context ) | nindent 4 }}
   {{- if $context.Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $context ) | nindent 4 }}
