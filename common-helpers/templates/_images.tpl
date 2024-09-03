@@ -19,7 +19,7 @@ Return the proper image name
 {{- if $registryName }}
     {{- printf "%s/%s%s%s" $registryName $repositoryName $separator $termination -}}
 {{- else -}}
-    {{- printf "%s%s%s"  $repositoryName $separator $termination -}}
+    {{- printf "%s%s%s" $repositoryName $separator $termination -}}
 {{- end -}}
 {{- end -}}
 
@@ -43,6 +43,7 @@ Return the proper Docker Image Registry Secret Names evaluating values as templa
   {{- end -}}
 
   {{- range .images -}}
+    {{- if . -}}
     {{- range .pullSecrets -}}
       {{- if kindIs "map" . -}}
         {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" .name "context" $context)) -}}
@@ -50,14 +51,15 @@ Return the proper Docker Image Registry Secret Names evaluating values as templa
         {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
       {{- end -}}
     {{- end -}}
+    {{- end -}}
   {{- end -}}
 
-  {{- if (not (empty $pullSecrets)) }}
+  {{- if (not (empty $pullSecrets)) -}}
 imagePullSecrets:
     {{- range $pullSecrets | uniq }}
   - name: {{ . }}
     {{- end }}
-  {{- end }}
+  {{- end -}}
 {{- end -}}
 
 {{/*

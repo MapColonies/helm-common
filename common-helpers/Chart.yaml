@@ -7,10 +7,6 @@ keywords:
   - helper
   - template
   - function
-name: common
+name: common-helpers
 type: library
 version: 1.0.1
-dependencies:
-- name: common-helpers
-  version: 1.0.1
-  repository: file://./common-helpers

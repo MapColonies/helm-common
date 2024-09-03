@@ -1,0 +1,6 @@
+dependencies:
+- name: common-helpers
+  repository: file://./common-helpers
+  version: 1.0.1
+digest: sha256:2f3fa4f072360294874aebf53bdfe72b10f8cb7b0207fe3234402a5e2b7d6d4f
+generated: "2024-05-30T11:23:31.7514196+03:00"

@@ -1,0 +1,4 @@
+## It is required by helm lint to pass tools and processes.
+## @skip exampleValue
+##
+exampleValue: common-chart
