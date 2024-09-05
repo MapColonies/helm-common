@@ -1,2 +1,5 @@
 # helm chart package
 *.tgz
+
+# dependencies
+/node_modules

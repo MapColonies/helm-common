@@ -1,0 +1,30 @@
+{
+  "name": "helm-common",
+  "version": "1.0.1",
+  "description": "MapColonies common facilities to k8s service deployments",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "helm plugin install https://github.com/losisin/helm-values-schema-json.git",
+    "gen-readme": "readme-generator -r ./README.md -v ./values.yaml",
+    "gen-schema": "helm schema -input ./values.yaml -output ./schema.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MapColonies/helm-common.git"
+  },
+  "keywords": [
+    "MapColonies",
+    "k8s",
+    "deployment",
+    "templates"
+  ],
+  "author": "MapColonies (Alex Lebinson)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MapColonies/helm-common/issues"
+  },
+  "homepage": "https://github.com/MapColonies/helm-common#readme",
+  "devDependencies": {
+    "@bitnami/readme-generator-for-helm": "^2.6.1"
+  }
+}
