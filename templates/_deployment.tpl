@@ -68,7 +68,9 @@ spec:
       affinity:
         podAffinity: {{- include "common.affinities.pods" (dict "type" $MAIN_OBJECT_BLOCK.podAffinityPreset "component" $COMPONENT_NAME "customLabels" $podLabels "context" $context) | nindent 10 }}
         podAntiAffinity: {{- include "common.affinities.pods" (dict "type" $MAIN_OBJECT_BLOCK.podAntiAffinityPreset "component" $COMPONENT_NAME "customLabels" $podLabels "context" $context) | nindent 10 }}
+        {{- if $MAIN_OBJECT_BLOCK.nodeAffinityPreset }}
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.type "key" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.key "values" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.values) | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- if $MAIN_OBJECT_BLOCK.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" ( dict "value" $MAIN_OBJECT_BLOCK.nodeSelector "context" $context) | nindent 8 }}
@@ -85,7 +87,7 @@ spec:
       {{- if $MAIN_OBJECT_BLOCK.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.topologySpreadConstraints "context" $context) | nindent 8 }}
       {{- end }}
-      {{- if $MAIN_OBJECT_BLOCK.podSecurityContext.enabled }}
+      {{- if and $MAIN_OBJECT_BLOCK.podSecurityContext $MAIN_OBJECT_BLOCK.podSecurityContext.enabled }}
       securityContext: {{- omit $MAIN_OBJECT_BLOCK.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
       {{- if $MAIN_OBJECT_BLOCK.terminationGracePeriodSeconds }}
