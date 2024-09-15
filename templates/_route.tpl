@@ -41,7 +41,14 @@ spec:
     insecureEdgeTerminationPolicy: {{ $context.Values.route.tls.insecureEdgeTerminationPolicy }}
     {{- end }}
     {{- if $context.Values.route.tls.useCerts }}
-    {{- include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | nindent 4 }}
+    {{- $GLOBAL_TLS_CERTS := include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | fromYamlArray -}}
+    {{- range $GLOBAL_TLS_CERTS }}
+    {{- if eq .hostname $context.Values.route.hostname }}
+    certificate: .certificate
+    key: .key
+    caCertificate: .caCertificate
+    {{- end }}
+    {{- end }}
     {{- end }}
   {{- end }}
   {{- if $context.Values.route.extraRules }}
