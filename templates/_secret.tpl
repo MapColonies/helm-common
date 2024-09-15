@@ -23,6 +23,6 @@ metadata:
 type: {{ $type }}
 data:
   {{- range $data }}
-  {{ $data.key }}: {{ $data.value | b64enc }}
+  {{ .key }}: {{ .value | b64enc }}
   {{- end }}
 {{- end }}
