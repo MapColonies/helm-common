@@ -6,8 +6,8 @@ USAGE:
 {{- define "mc-chart.secret" -}}
 {{- $context := .context }}
 {{- $name := .name }}
-{{- $key := .key }}
-{{- $value := .value }}
+{{- $type := .type }}
+{{- $data := .data }}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 apiVersion: v1
 kind: Secret
@@ -20,7 +20,9 @@ metadata:
   {{- if $context.Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" $context.Values.commonAnnotations "context" $context ) | nindent 4 }}
   {{- end }}
-type: Opaque
+type: {{ $type }}
 data:
-  {{ $key }}: {{ $value | b64enc }}
+  {{- range $data }}
+  {{ .key }}: {{ .value | b64enc }}
+  {{- end }}
 {{- end }}
