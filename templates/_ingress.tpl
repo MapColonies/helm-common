@@ -56,7 +56,7 @@ spec:
     {{- if and $context.Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $context.Values.ingress.annotations )) $context.Values.ingress.selfSigned) }}
     - hosts:
         - {{ $context.Values.ingress.hostname | quote }}
-      secretName: {{ printf "%s-tls" $context.Values.ingress.hostname }}
+      secretName: {{ include "common.secrets.tlsSecretName" (dict "context" $context) }}
     {{- end }}
     {{- if $context.Values.ingress.extraTls }}
     {{- include "common.tplvalues.render" (dict "value" $context.Values.ingress.extraTls "context" $context) | nindent 4 }}
