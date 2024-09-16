@@ -1,6 +1,6 @@
 {{/*
 USAGE:
-{{ include "mc-chart.secret" (dict "COMPONENT_NAME" $COMPONENT_NAME "name" $name "key" $key "value" $value "context" .) }}
+{{ include "mc-chart.secret" (dict "COMPONENT_NAME" $COMPONENT_NAME "name" $name "type" $type "data" $data "context" .) }}
 */}}
 
 {{- define "mc-chart.secret" -}}
