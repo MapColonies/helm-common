@@ -22,7 +22,7 @@ function readAdditionalPropertiesFile(filePath) {
 };
 
 const AddPropsToSchema = (additionalProperties) => {
-    fs.readFile('./schema.json', 'utf8', (err, data) => {
+    fs.readFile('./big_schema.json', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading ./schema.json file:', err);
             return;
@@ -37,7 +37,7 @@ const AddPropsToSchema = (additionalProperties) => {
             }            
         }
 
-        fs.writeFile('./schema.json', JSON.stringify(updatedJson, null, 2), 'utf8', (err) => {
+        fs.writeFile('./big_schema.json', JSON.stringify(updatedJson, null, 2), 'utf8', (err) => {
             if (err) {
                 console.error('Error writing ./schema.json file:', err);
                 return;
