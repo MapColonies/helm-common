@@ -3,6 +3,6 @@
   "type": "object",
   "additionalProperties": {
     "type": "object",
-    "additionalProperties": {"$ref": "/home/dorinme/Projects/helm-common/additionalProperties.json"}
+    "additionalProperties": {"$ref": "additionalProperties.json"}
   }
 }
