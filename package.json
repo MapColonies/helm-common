@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "helm plugin install https://github.com/losisin/helm-values-schema-json.git",
     "gen-readme": "readme-generator -r ./README.md -v ./values.yaml",
-    "gen-schema": "helm schema -input ./values.yaml -output ./schema.json"
+    "gen-schema": "helm schema -input ./values.yaml -output ./schema.json",
+    "gen-schema-additionalprops": "node ./generate-schema-additional-properties.js"
   },
   "repository": {
     "type": "git",

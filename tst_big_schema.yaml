@@ -1,0 +1,933 @@
+# ====================================================================================================
+# Route/Ingress TLS Certs
+# ====================================================================================================
+# certificate: &certificate |-
+#   -----BEGIN CERTIFICATE-----
+#   MIIGmjCCBYKgAwIBAgIJAMVvyqE0qXvLMA0GCSqGSIb3DQEBCwUAMIG0MQswCQYD
+#   VQQGEwJVUzEQMA4GA1UECBMHQXJpem9uYTETMBEGA1UEBxMKU2NvdHRzZGFsZTEa
+#   MBgGA1UEChMRR29EYWRkeS5jb20sIEluYy4xLTArBgNVBAsTJGh0dHA6Ly9jZXJ0
+#   cy5nb2RhZGR5LmNvbS9yZXBvc2l0b3J5LzEzMDEGA1UEAxMqR28gRGFkZHkgU2Vj
+#   dXJlIENlcnRpZmljYXRlIEF1dGhvcml0eSAtIEcyMB4XDTI0MDQyMTEyMjEyNloX
+#   DTI1MDQyMTEyMjEyNlowHDEaMBgGA1UEAwwRKi5tYXBjb2xvbmllcy5uZXQwggEi
+#   MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDjVHGhFZeogFsS8+qgz+uuwrox
+#   pH090K2trTp5oZHnzME0guxuLSpeqnFijgyfd6WmY1rCI4mujHTHrlkUaRK1jsOx
+#   vRFPdYjW+FLfrR004uZjLXkU5BbQC33X84a9epTnKP6xZEX7x3BOa+NhLod36Zs1
+#   Hj3ZPY7GeC2ZWkO6/NFEzs/GzNL27ZfoYaN44jUjpteY48dUjE9gERNxO4cdsvGY
+#   LLHsRReW7GDa+0sRj6Q/7vbpO50hnTS9XWS+NYwT9fE2yAozzA7i7i17stPMw4et
+#   +4sgm3yd7cIUTHg/22IYXvck9uxhg4tqnaeaOkSYeB+0wg8fcTPeRNho94nVAgMB
+#   AAGjggNEMIIDQDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggr
+#   BgEFBQcDAjAOBgNVHQ8BAf8EBAMCBaAwOQYDVR0fBDIwMDAuoCygKoYoaHR0cDov
+#   L2NybC5nb2RhZGR5LmNvbS9nZGlnMnMxLTIwMzc5LmNybDBdBgNVHSAEVjBUMEgG
+#   C2CGSAGG/W0BBxcBMDkwNwYIKwYBBQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0ZXMu
+#   Z29kYWRkeS5jb20vcmVwb3NpdG9yeS8wCAYGZ4EMAQIBMHYGCCsGAQUFBwEBBGow
+#   aDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZ29kYWRkeS5jb20vMEAGCCsGAQUF
+#   BzAChjRodHRwOi8vY2VydGlmaWNhdGVzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkv
+#   Z2RpZzIuY3J0MB8GA1UdIwQYMBaAFEDCvSeOzDSDMKIz1/tss/C0LIDOMC0GA1Ud
+#   EQQmMCSCESoubWFwY29sb25pZXMubmV0gg9tYXBjb2xvbmllcy5uZXQwHQYDVR0O
+#   BBYEFO2D9sdUDqR+1SzxzwrymenO4iJPMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFq
+#   AWgAdwBOdaMnXJoQwzhbbNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY8AmqlXAAAE
+#   AwBIMEYCIQC4wdijrQ5SrdIK/s8ZWY3YSB3WN5SIgvEfUyJydTur7wIhAK895IRS
+#   WWYxbtIs3/RSefYT1EmnosmpZ5wu+oRyS4y6AHYAfVkeEuF4KnscYWd8Xv340Idc
+#   FKBOlZ65Ay/ZDowuebgAAAGPAJqqbwAABAMARzBFAiEAuX9cw6/q3mt1L/2FR37w
+#   QPVP/f3JaNmcOmLvBJvrC1cCIA5HiBD9smsL1QnMvOEhWhkTrnLY2zi93zNJFQEa
+#   BDuTAHUAzPsPaoVxCWX+lZtTzumyfCLphVwNl422qX5UwP5MDbAAAAGPAJqq2wAA
+#   BAMARjBEAiBrZbvxVJucXij06TW0GV8lTpy2YPuI5WGuut2y+i6gowIgVG0tBzyP
+#   jmJ7vY/WqwCT7yv7awK68htbiESkgj9RMgQwDQYJKoZIhvcNAQELBQADggEBACrl
+#   ZU1QxRzEt+IfKtbM1Km0c71Lcdu+iJ48dmWM231kJ6E0zC6pURg98uO2XzI9q9ps
+#   AmtKqDSdhLTSgvvBrWfWXUWYIMqgkgF0tvWY4DcuPqKnTo+IorVGvPNWVpVAqTpE
+#   2+6MDrgL0Cjrgp9z2JKQaOVHG82u0MqhnFXINE1QrcPqMsNYKlp18IBnzv+f3p90
+#   fF2bahwRtnhIe1Tsd8E5118XgZ/BVtUGFa+ch2EMAy0HGUb0Sk77UgWRVshRC35J
+#   zlAdW/24Mkw62IYkugmCiwQ090oDHEtJl0CU3xJBfTiX3dRBdQrrydqbjvvxm14S
+#   JBwiq7EoT2sYYMlMXU0=
+#   -----END CERTIFICATE-----
+# key: &key |-
+#   -----BEGIN RSA PRIVATE KEY-----
+#   MIIEpQIBAAKCAQEA41RxoRWXqIBbEvPqoM/rrsK6MaR9PdCtra06eaGR58zBNILs
+#   bi0qXqpxYo4Mn3elpmNawiOJrox0x65ZFGkStY7Dsb0RT3WI1vhS360dNOLmYy15
+#   FOQW0At91/OGvXqU5yj+sWRF+8dwTmvjYS6Hd+mbNR492T2OxngtmVpDuvzRRM7P
+#   xszS9u2X6GGjeOI1I6bXmOPHVIxPYBETcTuHHbLxmCyx7EUXluxg2vtLEY+kP+72
+#   6TudIZ00vV1kvjWME/XxNsgKM8wO4u4te7LTzMOHrfuLIJt8ne3CFEx4P9tiGF73
+#   JPbsYYOLap2nmjpEmHgftMIPH3Ez3kTYaPeJ1QIDAQABAoIBAQCvB0ZRq0lQYDs+
+#   9XRSCqRAswcez7HqFTCTxwt9uKuZGGotXxxgm//CUWLpactIQJvW5ypqzWflb5k+
+#   YPuPHnNcPKZpw9N/JVSNhzZvp18UaBrQg6N1NURnPGHRElxMqQPakxK+TCEiAOV0
+#   S9cO7P86kS+CD125VI8IOmGJcBkz7p3/Ks7ownxOrlDrehUhdS9se9cYNp/71rn0
+#   ztTfLTcn9hmzNVZd+Y1FT+umY6seiL1GVDYULT5gToUR354b33a0u2EYOzqxJyo1
+#   xktQD7D9yfn6a/ROiWC6zUM2eOYnsMi3fe6ZtVkbCfcgSMwx5YsMAXJX7PF8Hcst
+#   Av3JrY+lAoGBAPsDsNY0NbvRqBBvkVhvawVvWhXjqy0MZR5xIu/CQXxvPcP6YBZR
+#   K4k8O6Bun1CjR4VsmybSBwmchoB3YrxQ4Ve0IddRf6ZQLXJcZIqgK6EOmDH9qBTs
+#   Pmj6VTavmnk+1q/456tpCbzwQ2Omdo8Dr1CEA3jxKMkB7gUp5pGJOcPfAoGBAOfY
+#   U5NDnDQ+9Idlmb7hftpXK7H+xu0t5P5+5RRyrbm+hNYk1qPhCEehouGPsvwjtpXI
+#   IgkQMThMAMZiLHqjDGw97W23NuRwCubgfKcfWs9/xsU8dZ9bkUqDJr9bUayHAgE7
+#   P/bvAD33NDOWBohJQWtjjY4a9i/AVmm9bGmVPcjLAoGANJVsWSMs0oC0JWVJ3G3S
+#   zJusEoPUGybKlBr9R565GzkuhjyQHny4kxI0J4KlCz55QCElS3eaE9BfeNAJtgt3
+#   eWj54eJnzE5lhtyGD2hIW3/0MBzENkXbOSCf80nMIXQhg1GwLn9dk9/9LgX0Njd+
+#   ZW6ST6atdZZa52gErh5CJJ8CgYEAvzOIuUpo6C2DPKZtxR3yn96ECqczJydSUxAT
+#   nGl3HFgi9Pgsi7pqOajzy1HXKlnJmn0SlKbl8Ke9e947EGinNh1cUb9nZb2BQCai
+#   prEVE0stgjv6RRIfIHRI4EdPdBljbeCPP/abHH9ibaisenjvmsDfXPKfVYIpwcqW
+#   Pfz2l0ECgYEA5ZzUnBDrliW1udnUC25ixxJbCEB9j5W2EPAoi8uS/Hk0bBucQlcw
+#   PteHnVPBbQuhVJ8R7jJDIhuwgg+O92yuKwt256nfqTQbfX6i1DVyzIHkBAwTN4QY
+#   DwZUxhxEPvLHRmUSX1k1lFy2i4jIt3Hs1BxU9Vn+cui8ET1BwDsnTlc=
+#   -----END RSA PRIVATE KEY-----
+# caCertificate: &caCertificate |-
+#   -----BEGIN CERTIFICATE-----
+#   MIIGmjCCBYKgAwIBAgIJAMVvyqE0qXvLMA0GCSqGSIb3DQEBCwUAMIG0MQswCQYD
+#   VQQGEwJVUzEQMA4GA1UECBMHQXJpem9uYTETMBEGA1UEBxMKU2NvdHRzZGFsZTEa
+#   MBgGA1UEChMRR29EYWRkeS5jb20sIEluYy4xLTArBgNVBAsTJGh0dHA6Ly9jZXJ0
+#   cy5nb2RhZGR5LmNvbS9yZXBvc2l0b3J5LzEzMDEGA1UEAxMqR28gRGFkZHkgU2Vj
+#   dXJlIENlcnRpZmljYXRlIEF1dGhvcml0eSAtIEcyMB4XDTI0MDQyMTEyMjEyNloX
+#   DTI1MDQyMTEyMjEyNlowHDEaMBgGA1UEAwwRKi5tYXBjb2xvbmllcy5uZXQwggEi
+#   MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDjVHGhFZeogFsS8+qgz+uuwrox
+#   pH090K2trTp5oZHnzME0guxuLSpeqnFijgyfd6WmY1rCI4mujHTHrlkUaRK1jsOx
+#   vRFPdYjW+FLfrR004uZjLXkU5BbQC33X84a9epTnKP6xZEX7x3BOa+NhLod36Zs1
+#   Hj3ZPY7GeC2ZWkO6/NFEzs/GzNL27ZfoYaN44jUjpteY48dUjE9gERNxO4cdsvGY
+#   LLHsRReW7GDa+0sRj6Q/7vbpO50hnTS9XWS+NYwT9fE2yAozzA7i7i17stPMw4et
+#   +4sgm3yd7cIUTHg/22IYXvck9uxhg4tqnaeaOkSYeB+0wg8fcTPeRNho94nVAgMB
+#   AAGjggNEMIIDQDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggr
+#   BgEFBQcDAjAOBgNVHQ8BAf8EBAMCBaAwOQYDVR0fBDIwMDAuoCygKoYoaHR0cDov
+#   L2NybC5nb2RhZGR5LmNvbS9nZGlnMnMxLTIwMzc5LmNybDBdBgNVHSAEVjBUMEgG
+#   C2CGSAGG/W0BBxcBMDkwNwYIKwYBBQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0ZXMu
+#   Z29kYWRkeS5jb20vcmVwb3NpdG9yeS8wCAYGZ4EMAQIBMHYGCCsGAQUFBwEBBGow
+#   aDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZ29kYWRkeS5jb20vMEAGCCsGAQUF
+#   BzAChjRodHRwOi8vY2VydGlmaWNhdGVzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkv
+#   Z2RpZzIuY3J0MB8GA1UdIwQYMBaAFEDCvSeOzDSDMKIz1/tss/C0LIDOMC0GA1Ud
+#   EQQmMCSCESoubWFwY29sb25pZXMubmV0gg9tYXBjb2xvbmllcy5uZXQwHQYDVR0O
+#   BBYEFO2D9sdUDqR+1SzxzwrymenO4iJPMIIBfgYKKwYBBAHWeQIEAgSCAW4EggFq
+#   AWgAdwBOdaMnXJoQwzhbbNTfP1LrHfDgjhuNacCx+mSxYpo53wAAAY8AmqlXAAAE
+#   AwBIMEYCIQC4wdijrQ5SrdIK/s8ZWY3YSB3WN5SIgvEfUyJydTur7wIhAK895IRS
+#   WWYxbtIs3/RSefYT1EmnosmpZ5wu+oRyS4y6AHYAfVkeEuF4KnscYWd8Xv340Idc
+#   FKBOlZ65Ay/ZDowuebgAAAGPAJqqbwAABAMARzBFAiEAuX9cw6/q3mt1L/2FR37w
+#   QPVP/f3JaNmcOmLvBJvrC1cCIA5HiBD9smsL1QnMvOEhWhkTrnLY2zi93zNJFQEa
+#   BDuTAHUAzPsPaoVxCWX+lZtTzumyfCLphVwNl422qX5UwP5MDbAAAAGPAJqq2wAA
+#   BAMARjBEAiBrZbvxVJucXij06TW0GV8lTpy2YPuI5WGuut2y+i6gowIgVG0tBzyP
+#   jmJ7vY/WqwCT7yv7awK68htbiESkgj9RMgQwDQYJKoZIhvcNAQELBQADggEBACrl
+#   ZU1QxRzEt+IfKtbM1Km0c71Lcdu+iJ48dmWM231kJ6E0zC6pURg98uO2XzI9q9ps
+#   AmtKqDSdhLTSgvvBrWfWXUWYIMqgkgF0tvWY4DcuPqKnTo+IorVGvPNWVpVAqTpE
+#   2+6MDrgL0Cjrgp9z2JKQaOVHG82u0MqhnFXINE1QrcPqMsNYKlp18IBnzv+f3p90
+#   fF2bahwRtnhIe1Tsd8E5118XgZ/BVtUGFa+ch2EMAy0HGUb0Sk77UgWRVshRC35J
+#   zlAdW/24Mkw62IYkugmCiwQ090oDHEtJl0CU3xJBfTiX3dRBdQrrydqbjvvxm14S
+#   JBwiq7EoT2sYYMlMXU0=
+#   -----END CERTIFICATE-----
+# root-ca: &root-ca |-
+#   -----BEGIN CERTIFICATE-----
+#   MIIE0DCCA7igAwIBAgIBBzANBgkqhkiG9w0BAQsFADCBgzELMAkGA1UEBhMCVVMx
+#   EDAOBgNVBAgTB0FyaXpvbmExEzARBgNVBAcTClNjb3R0c2RhbGUxGjAYBgNVBAoT
+#   EUdvRGFkZHkuY29tLCBJbmMuMTEwLwYDVQQDEyhHbyBEYWRkeSBSb290IENlcnRp
+#   ZmljYXRlIEF1dGhvcml0eSAtIEcyMB4XDTExMDUwMzA3MDAwMFoXDTMxMDUwMzA3
+#   MDAwMFowgbQxCzAJBgNVBAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQH
+#   EwpTY290dHNkYWxlMRowGAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UE
+#   CxMkaHR0cDovL2NlcnRzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQD
+#   EypHbyBEYWRkeSBTZWN1cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwggEi
+#   MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC54MsQ1K92vdSTYuswZLiBCGzD
+#   BNliF44v/z5lz4/OYuY8UhzaFkVLVat4a2ODYpDOD2lsmcgaFItMzEUz6ojcnqOv
+#   K/6AYZ15V8TPLvQ/MDxdR/yaFrzDN5ZBUY4RS1T4KL7QjL7wMDge87Am+GZHY23e
+#   cSZHjzhHU9FGHbTj3ADqRay9vHHZqm8A29vNMDp5T19MR/gd71vCxJ1gO7GyQ5HY
+#   pDNO6rPWJ0+tJYqlxvTV0KaudAVkV4i1RFXULSo6Pvi4vekyCgKUZMQWOlDxSq7n
+#   eTOvDCAHf+jfBDnCaQJsY1L6d8EbyHSHyLmTGFBUNUtpTrw700kuH9zB0lL7AgMB
+#   AAGjggEaMIIBFjAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBBjAdBgNV
+#   HQ4EFgQUQMK9J47MNIMwojPX+2yz8LQsgM4wHwYDVR0jBBgwFoAUOpqFBxBnKLbv
+#   9r0FQW4gwZTaD94wNAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8v
+#   b2NzcC5nb2RhZGR5LmNvbS8wNQYDVR0fBC4wLDAqoCigJoYkaHR0cDovL2NybC5n
+#   b2RhZGR5LmNvbS9nZHJvb3QtZzIuY3JsMEYGA1UdIAQ/MD0wOwYEVR0gADAzMDEG
+#   CCsGAQUFBwIBFiVodHRwczovL2NlcnRzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkv
+#   MA0GCSqGSIb3DQEBCwUAA4IBAQAIfmyTEMg4uJapkEv/oV9PBO9sPpyIBslQj6Zz
+#   91cxG7685C/b+LrTW+C05+Z5Yg4MotdqY3MxtfWoSKQ7CC2iXZDXtHwlTxFWMMS2
+#   RJ17LJ3lXubvDGGqv+QqG+6EnriDfcFDzkSnE3ANkR/0yBOtg2DZ2HKocyQetawi
+#   DsoXiWJYRBuriSUBAA/NxBti21G00w9RKpv0vHP8ds42pM3Z2Czqrpv1KrKQ0U11
+#   GIo/ikGQI31bS/6kA1ibRrLDYGCD+H1QQc7CoZDDu+8CL9IVVO5EFdkKrqeKM+2x
+#   LXY2JtwE65/3YR8V3Idv7kaWKK2hJn0KCacuBKONvPi8BDAB
+#   -----END CERTIFICATE-----
+
+
+# ====================================================================================================
+# Global
+# ====================================================================================================
+global:
+  enable-services:
+    app:
+      enabled: true
+      discreteLayerClient: true
+      catalogWebAppBff: true
+      mcWebTools: true
+    common:
+      enabled: true
+      lookupTables: true
+      k8sServicesList: true
+      mcThumbnailGenerator: true
+
+# environment: development
+
+
+# ====================================================================================================
+# app
+# ====================================================================================================
+app:
+
+  # ====================================================================================================
+  # discrete-layer-client
+  # ====================================================================================================
+  discrete-layer-client:
+    shared:
+      servedEntityTypes: RECORD_ALL,RECORD_DEM
+      accessToken:
+        attributeName: token
+        injectionType: queryParam
+        tokenValue: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYXBDb2xvbmllc0RldiIsImlhdCI6MTUxNjIzOTAyMiwiZCI6WyJyYXN0ZXIiLCJyYXN0ZXJXbXMiLCJyYXN0ZXJFeHBvcnQiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdfQ.GvTQ_yLjnioxxFrNgGQiuarhJxLpe8AhTTtrWE3LHoUED48CFKBEOfKqOyEWSDVZjx1jHkDvZAL1iyEvi5FHNys7UBRXCiJvVlG-muJZ6ycS9PGKauzL-eggXqTqGsXh4FBkqvHUEElXEnu7ARsMCm5eIC66U2i_eHFU3PLcOc67qJvS1IQjAI2oj9Pd5mGaI_HlDaf3B4PFOb0AHdY-r_MDGwck3asm1G_InVzsvCXt36vImyn1Z4HYaN4YiDfaMLBF0-GGrlLE84PObzGGtt66EIuQ4OneEZSzoQNusBt5-SFs0EQXsfsDc_RMRTz3DZseqkNIKiXEsEBBPjMr7w
+    sso:
+      enabled: false
+      redirectUrl:
+    kubeVersion:
+    commonLabels:
+    commonAnnotations:
+    # ----------- initContainers ----------
+    volumePermissions:
+      enabled: true
+    # ------ volumes and volumeMounts -----
+    persistence:
+      enabled: false
+    # ----------- command/debug -----------
+    diagnosticMode:
+      enabled: false
+      # command:
+      #   - sleep
+      # args:
+      #   - infinity
+    # --------- MAIN_OBJECT_BLOCK ---------
+    configValues:
+      deploymentAnnotations:
+        # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+      autoscaling:
+        enabled: false
+      replicaCount: 1
+      podAnnotations:
+        enabled: true
+        resetOnConfigChange: true
+        annotations: {}
+      prometheus:
+        scrape: false
+      metrics:
+        enabled: false
+      tracing:
+        enabled: false
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/node
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: '{{ include "common.names.name" . }}'
+      # ----------- containers ------------
+      image:
+        repository: discrete-layer-client
+        tag: v2.10.10
+        pullPolicy: Always
+        debug: false
+      containerSecurityContext:
+        enabled: true
+        allowPrivilegeEscalation: false
+        # runAsUser: 0
+      extraEnvVars:
+        - name: SERVER_PORT
+          value: '{{ .Values.configValues.containerPorts.http }}'
+      extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+      extraEnvVarsSecret:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 50m
+          memory: 500Mi
+      containerPorts:
+        http: 8080
+        https: 443
+      customLivenessProbe:
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 3
+        successThreshold: 1
+        httpGet:
+          path: /env-config.js
+          port: http
+      customReadinessProbe:
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 3
+        successThreshold: 1
+        httpGet:
+          path: /env-config.js
+          port: http
+      startupProbe:
+        enabled : false
+      extraVolumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      extraVolumes:
+        - name: nginx-config
+          configMap:
+            name: '{{ template "common.names.fullname" . }}'
+            items:
+              - key: default.conf
+                path: default.conf
+    env:
+      logLevel: info
+      logPrettyPrintEnabled: false
+      responseCompressionEnabled: true
+      requestPayloadLimit: 1mb
+      publicUrl: '.'
+      serviceUrl: catalog-dem-dev.mapcolonies.net/bff/graphql
+      serviceProtocol: https://
+      mapServerPublishPoint: ''
+      mapServerUrl: ''
+      mapServerChannel: ''
+      mapServerVersion: ''
+      mapServerRequest: ''
+      activeLayer: OSM_LAYER
+      loggerHttpHost: ''
+      loggerHttpPort: ''
+      loggerHttpPath: ''
+      loggerLevel: warn
+      bboxAreaSquareKmLimit: 10000
+      language: he
+      jobStatus:
+        pollingCycleInterval: 60000
+      defaultUser:
+        role: USER
+      runningMode:
+        type: PRODUCTION
+        autoComplete: false
+      export:
+        defaultZoomLevel: '' #todo
+        maxZoomLevel: '' #todo
+      map:
+        center: '[34.811, 31.908]'
+        zoom: 7
+        useOptimizedTileRequests: false
+      baseMaps: '{"maps":[{"id":"1st","title":"1st Map","isForPreview":true,"thumbnail":"/./assets/img/app/1st.png","baseRasteLayers":[{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"INFRARED_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/goes/conus_ir.cgi?","layers":"goes_conus_ir","credit":"Infrared data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}}],"baseVectorLayers":[]},{"id":"2nd","title":"2nd Map","thumbnail":"/./assets/img/app/2nd.png","baseRasteLayers":[{"id":"RADAR_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?","layers":"nexrad-n0r","credit":"Radar data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}},{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"VECTOR_TILES_GPS","type":"XYZ_LAYER","opacity":1,"zIndex":2,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]},{"id":"3rd","title":"3rd Map","isCurrent":true,"thumbnail":"/./assets/img/app/3rd.png","baseRasteLayers":[{"id":"VECTOR_TILES","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38","layers":"","credit":"thunderforest"}},{"id":"VECTOR_TILES_GPS_1","type":"XYZ_LAYER","opacity":1,"zIndex":1,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]}]}'
+      defaultTerrainProviderUrl: https://dem-dev-nginx-s3-gateway-development-nginx-s3-gateway-dem-dev.apps.j1lk3njp.eastus.aroapp.io/api/dem/v1/terrains/srtm100
+      webToolsUrl: https://catalog-dem-dev.mapcolonies.net/tools
+      modelAnalyzerRoute: 3d-analysis
+      modelAnalyzerTokenValue: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYXBDb2xvbmllc0RldiIsImlhdCI6MTUxNjIzOTAyMiwiZCI6WyJyYXN0ZXIiLCJyYXN0ZXJXbXMiLCJyYXN0ZXJFeHBvcnQiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdfQ.GvTQ_yLjnioxxFrNgGQiuarhJxLpe8AhTTtrWE3LHoUED48CFKBEOfKqOyEWSDVZjx1jHkDvZAL1iyEvi5FHNys7UBRXCiJvVlG-muJZ6ycS9PGKauzL-eggXqTqGsXh4FBkqvHUEElXEnu7ARsMCm5eIC66U2i_eHFU3PLcOc67qJvS1IQjAI2oj9Pd5mGaI_HlDaf3B4PFOb0AHdY-r_MDGwck3asm1G_InVzsvCXt36vImyn1Z4HYaN4YiDfaMLBF0-GGrlLE84PObzGGtt66EIuQ4OneEZSzoQNusBt5-SFs0EQXsfsDc_RMRTz3DZseqkNIKiXEsEBBPjMr7w
+      whatsnewUrl: http://10.8.0.9:9001/buckets/static-assets/LibotWhatsNew.pdf
+      projectVersion: 1.20.2
+      activeLayerPropeties:
+        mapUrlPath: '' #todo
+        exportPath: '' #todo
+        urlPattern:
+          service: ''
+          layers: ''
+          tiled: true
+          matrixSet: ''
+          style: ''
+          projection: ''
+      sitesConfig: '{"masters": [{ "dns": "https://catalog-dem-dev.mapcolonies.net", "isAlias": false }], "slaves": [], "generics": []}'
+      bffPath: /bff/graphql
+    route:
+      enabled: true
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+      timeout:
+        enabled: false
+        duration: 60s
+      hostname: catalog-dem-dev.mapcolonies.net
+      path: /
+      targetPort: http
+      tls:
+        enabled: true
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+        useCerts: true
+      extraRules:
+    ingress:
+      enabled: false
+      # apiVersion: ""
+      # type: nginx-kubernetes
+      # annotations: {}
+      # pathType: Prefix
+      # hostname: COMPONENT_NAME.local
+      # extraHosts: []
+      # extraPaths: []
+      # path: /ui
+      # extraRules: []
+      # extraTls: []
+      # selfSigned: false
+      # tls: true
+      # cors:
+      #   enabled: true
+      #   origin: '*'
+    service:
+      annotations: {}
+      ports:
+        http: 80
+      protocol: TCP
+    serviceAccount:
+      create: false
+      name: ""
+      annotations: {}
+
+  # ====================================================================================================
+  # catalog-web-app-bff
+  # ====================================================================================================
+  catalog-web-app-bff:
+    runAsUser: 1000700000
+    annotations:
+      collectord.io/index: ''
+      collectord.io/logs-output: splunk
+      collectord.io/procstats-output: devnull
+      collectord.io/netstats-output: devnull
+      collectord.io/nettable-output: devnull
+      collectord.io/stats-output: devnull
+    route:
+      enabled: true
+      host: catalog-dem-dev.mapcolonies.net
+      path: /bff
+      tls:
+        enabled: true
+        useCert: true
+        certificate: *certificate
+        key: *key
+        caCertificate: *caCertificate
+    ingress:
+      enabled: false
+      type: nginx-kubernetes # supported values: 'nginx-org' | 'nginx-kubernetes'
+      host:
+      path: /bff
+      tls:
+        useExternal:
+    caSecret:
+      name: root-ca
+      path: /usr/local/share/ca-certificates
+      key: ca.crt
+      value: *root-ca
+    shared:
+      servedEntityTypes: RECORD_ALL,RECORD_DEM
+      accessToken:
+        attributeName: token
+        injectionType: queryParam
+        tokenValue: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYXBDb2xvbmllc0RldiIsImlhdCI6MTUxNjIzOTAyMiwiZCI6WyJyYXN0ZXIiLCJyYXN0ZXJXbXMiLCJyYXN0ZXJFeHBvcnQiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdfQ.GvTQ_yLjnioxxFrNgGQiuarhJxLpe8AhTTtrWE3LHoUED48CFKBEOfKqOyEWSDVZjx1jHkDvZAL1iyEvi5FHNys7UBRXCiJvVlG-muJZ6ycS9PGKauzL-eggXqTqGsXh4FBkqvHUEElXEnu7ARsMCm5eIC66U2i_eHFU3PLcOc67qJvS1IQjAI2oj9Pd5mGaI_HlDaf3B4PFOb0AHdY-r_MDGwck3asm1G_InVzsvCXt36vImyn1Z4HYaN4YiDfaMLBF0-GGrlLE84PObzGGtt66EIuQ4OneEZSzoQNusBt5-SFs0EQXsfsDc_RMRTz3DZseqkNIKiXEsEBBPjMr7w
+    bff:
+      enabled: true
+      image: catalog-web-app-bff
+      imageTag: v1.21.1
+      replicaCount: 1
+      servicePort: 80
+      nodePort: 30020
+      env:
+        serverPort: 8080
+        openapiFilePath: ./openapi3.yaml
+        logLevel: info
+        requestPayloadLimit: 1mb
+        responseCompressionEnabled: true
+        adminPassword: 123456
+        cswRasterUrl: NOT_DEPLOYED
+        csw3DUrl: NOT_DEPLOYED
+        cswDEMUrl: http://dem-dev-pycsw-all-development-service-nginx
+        catalogServiceRasterUrl: NOT_DEPLOYED
+        catalogService3DUrl: NOT_DEPLOYED
+        catalogServiceDEMUrl: NOT_IMPLEMENTED
+        ingestionServiceRasterUrl: NOT_DEPLOYED
+        ingestionService3DUrl: NOT_DEPLOYED
+        ingestionServiceDEMUrl: NOT_IMPLEMENTED
+        storageExplorerRasterUrl: NOT_DEPLOYED
+        storageExplorer3DUrl: NOT_DEPLOYED
+        storageExplorerDEMUrl: NOT_IMPLEMENTED
+        validationServiceRasterUrl: NOT_DEPLOYED
+        exportLayerRasterUrl: NOT_DEPLOYED
+        exportLayer3DUrl: NOT_IMPLEMENTED
+        exportLayerDEMUrl: NOT_IMPLEMENTED
+        jobManagerServiceCommonUrl: NOT_DEPLOYED
+        lookupTablesServiceUrl: http://app-dem-dev-lookup-tables
+        serviceDiscoveryUrl: http://app-dem-dev-k8s-services-list
+        externalServices:
+          pycswRecordRasterUrl: NOT_DEPLOYED
+          pycswRecord3DUrl: NOT_DEPLOYED
+          pycswRecordDEMUrl: https://dem-dev-pycsw-development-nginx-route-dem-dev.apps.j1lk3njp.eastus.aroapp.io/api/dem/v1
+          mapServerRecordRasterUrl: NOT_DEPLOYED
+        mapServiceRasterUrl: NOT_DEPLOYED
+        wfsUrl: http://geoserver-vector-dev.apps.j1lk3njp.eastus.aroapp.io/geoserver/core/ows
+        wfsServicesConfig: '{"buildings": {"color": "#0465b0", "outlineColor": "#0465b0", "dWithin": 3, "isVisualized": true, "translationId": "actions.wfs.buildings-title", "icon": "location_city", "markerIcon": "buildings-marker"}, "addrs": {"translationId": "תשאול כתובת", "isVisualized": "false"}}'
+        polygonPartsUrl: NOT_DEPLOYED
+        demHeightsUrl: NOT_DEPLOYED
+      resources:
+        enabled: true
+        limits:
+          cpu: 500m
+          memory: 500Mi
+        requests:
+          cpu: 125m
+          memory: 500Mi
+
+  # ====================================================================================================
+  # mc-web-tools
+  # ====================================================================================================
+  mc-web-tools:
+    runAsUser: 1000700000
+    annotations:
+      collectord.io/index: ''
+      collectord.io/logs-output: splunk
+      collectord.io/procstats-output: devnull
+      collectord.io/netstats-output: devnull
+      collectord.io/nettable-output: devnull
+      collectord.io/stats-output: devnull
+    route:
+      enabled: true
+      host: catalog-dem-dev.mapcolonies.net
+      path: /tools
+      tls:
+        enabled: true
+        useCert: true
+        certificate: *certificate
+        key: *key
+        caCertificate: *caCertificate
+    ingress:
+      enabled: false
+      type: nginx-kubernetes # supported values: 'nginx-org' | 'nginx-kubernetes'
+      host:
+      path: /tools
+      tls:
+        useExternal:
+    sso:
+      enabled: false
+      redirectUrl:
+    shared:
+      servedEntityTypes: RECORD_ALL,RECORD_DEM
+      accessToken:
+        attributeName: token
+        injectionType: queryParam
+        tokenValue: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYXBDb2xvbmllc0RldiIsImlhdCI6MTUxNjIzOTAyMiwiZCI6WyJyYXN0ZXIiLCJyYXN0ZXJXbXMiLCJyYXN0ZXJFeHBvcnQiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdfQ.GvTQ_yLjnioxxFrNgGQiuarhJxLpe8AhTTtrWE3LHoUED48CFKBEOfKqOyEWSDVZjx1jHkDvZAL1iyEvi5FHNys7UBRXCiJvVlG-muJZ6ycS9PGKauzL-eggXqTqGsXh4FBkqvHUEElXEnu7ARsMCm5eIC66U2i_eHFU3PLcOc67qJvS1IQjAI2oj9Pd5mGaI_HlDaf3B4PFOb0AHdY-r_MDGwck3asm1G_InVzsvCXt36vImyn1Z4HYaN4YiDfaMLBF0-GGrlLE84PObzGGtt66EIuQ4OneEZSzoQNusBt5-SFs0EQXsfsDc_RMRTz3DZseqkNIKiXEsEBBPjMr7w
+    tools:
+      enabled: true
+      image: mc-web-tools
+      imageTag: vSDK_PHASE_1_21
+      replicaCount: 1
+      servicePort: 80
+      nodePort: 30021
+      env:
+        publicUrl: /tools
+        map:
+          center: '[34.811, 31.908]'
+          zoom: 7
+        baseMaps: '{"maps":[{"id":"1st","title":"1st Map","thumbnail":"/tools/assets/img/1st.png","baseRasteLayers":[{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"INFRARED_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/goes/conus_ir.cgi?","layers":"goes_conus_ir","credit":"Infrared data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}}],"baseVectorLayers":[]},{"id":"2nd","title":"2nd Map","thumbnail":"/tools/assets/img/2nd.png","baseRasteLayers":[{"id":"RADAR_RASTER","type":"WMS_LAYER","opacity":0.6,"zIndex":1,"options":{"url":"https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?","layers":"nexrad-n0r","credit":"Radar data courtesy Iowa Environmental Mesonet","parameters":{"transparent":"true","format":"image/png"}}},{"id":"GOOGLE_TERRAIN","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}","layers":"","credit":"GOOGLE"}},{"id":"VECTOR_TILES_GPS","type":"XYZ_LAYER","opacity":1,"zIndex":2,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]},{"id":"3rd","title":"3rd Map","isCurrent":true,"thumbnail":"/tools/assets/img/3rd.png","baseRasteLayers":[{"id":"VECTOR_TILES","type":"XYZ_LAYER","opacity":1,"zIndex":0,"options":{"url":"https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38","layers":"","credit":"thunderforest"}},{"id":"VECTOR_TILES_GPS_1","type":"XYZ_LAYER","opacity":1,"zIndex":1,"options":{"url":"https://gps.tile.openstreetmap.org/lines/{z}/{x}/{y}.png","layers":"","credit":"openstreetmap"}}],"baseVectorLayers":[]}]}'
+        defaultTerrainProviderUrl: https://dem-dev-nginx-s3-gateway-development-nginx-s3-gateway-dem-dev.apps.j1lk3njp.eastus.aroapp.io/api/dem/v1/terrains/srtm100?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYXBDb2xvbmllc0RldiIsImlhdCI6MTUxNjIzOTAyMiwiZCI6WyJyYXN0ZXIiLCJyYXN0ZXJXbXMiLCJyYXN0ZXJFeHBvcnQiLCJkZW0iLCJ2ZWN0b3IiLCIzZCJdfQ.GvTQ_yLjnioxxFrNgGQiuarhJxLpe8AhTTtrWE3LHoUED48CFKBEOfKqOyEWSDVZjx1jHkDvZAL1iyEvi5FHNys7UBRXCiJvVlG-muJZ6ycS9PGKauzL-eggXqTqGsXh4FBkqvHUEElXEnu7ARsMCm5eIC66U2i_eHFU3PLcOc67qJvS1IQjAI2oj9Pd5mGaI_HlDaf3B4PFOb0AHdY-r_MDGwck3asm1G_InVzsvCXt36vImyn1Z4HYaN4YiDfaMLBF0-GGrlLE84PObzGGtt66EIuQ4OneEZSzoQNusBt5-SFs0EQXsfsDc_RMRTz3DZseqkNIKiXEsEBBPjMr7w
+        apps: '{ "terrain-verification": { "category": "DEM", "name": "Terrain Verification Tool", "icon": "map-marker.gif", "url": "/terrain-verification", "description": "A Terrain Verification Tool", "isInternal": true }, "nominatim": { "category": "Vector", "name": "Nominatim", "icon": "nominatim.svg", "width": 160, "url": "https://nominatim.openstreetmap.org/ui/search.html", "description": "Nominatim is a search engine for OpenStreetMap data. You may search for a name or address (forward search) or look up data by its geographic coordinate (reverse search)" }, "valhalla": { "category": "Vector", "name": "Valhalla", "externalIconURL": "https://valhalla.openstreetmap.de/favicon.png", "width": 130, "url": "https://valhalla.openstreetmap.de", "description": "Valhalla is an open source routing engine and accompanying libraries for use with OpenStreetMap data. Valhalla also includes tools like time+distance matrix computation, isochrones, elevation sampling, map matching and tour optimization (Travelling Salesman)" }, "sandcastle": { "category": "Cesium", "name": "Sandcastle", "icon": "cesium.webp", "width": 200, "url": "https://sandcastle.cesium.com", "description": "Sandcastle is a live-coding app for viewing CesiumJS examples. Contextual CesiumJS help for quickly sharing and testing code" }, "developer-portal": { "category": "Libot Mipui", "name": "Developer Portal", "icon": "developer-portal.png", "width": 100, "url": "https://mapcolonies.github.io/developer-portal", "description": "A central information hub about Libot Mipui documentation, APIs, products and microservices" }, "uploader": { "category": "Libot Mipui", "name": "Uploader", "icon": "upload.gif", "width": 100, "url": "http://10.8.0.9:9001/buckets/static-assets/LibotWhatsNew.pdf", "description": "Download uploader exe for installation", "isDownloadable": true, "fileName": "uploader.exe" } }'
+        csw3DUrl: NOT_DEPLOYED
+        shouldShowPrecisionDisclaimer: 'כלי ניתוח השטח טרם עברו חק״ב - אין להסתמך על הנתונים <b>לשימושים מבצעיים</b>!'
+      resources:
+        enabled: true
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 50m
+          memory: 500Mi
+
+# ====================================================================================================
+# common
+# ====================================================================================================
+common:
+
+  # ====================================================================================================
+  # lookup-tables
+  # ====================================================================================================
+  lookup-tables:
+    kubeVersion:
+    commonLabels:
+    commonAnnotations:
+    # ----------- initContainers ----------
+    volumePermissions:
+      enabled: false
+    # ------ volumes and volumeMounts -----
+    persistence:
+      enabled: false
+    # ----------- command/debug -----------
+    diagnosticMode:
+      enabled: false
+      # command:
+      #   - sleep
+      # args:
+      #   - infinity
+    # --------- MAIN_OBJECT_BLOCK ---------
+    configValues:
+      deploymentAnnotations:
+        # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+      autoscaling:
+        enabled: false
+      replicaCount: 1
+      podAnnotations:
+        enabled: true
+        resetOnConfigChange: true
+        annotations: {}
+      prometheus:
+        scrape: false
+      metrics:
+        enabled: false
+      tracing:
+        enabled: false
+      # ----------- containers ------------
+      image:
+        repository: lookup-tables
+        tag: v1.1.10
+        pullPolicy: Always
+        debug: false
+      containerSecurityContext:
+        enabled: true
+        allowPrivilegeEscalation: false
+        # runAsUser: 0
+      extraEnvVars:
+        - name: SERVER_PORT
+          value: '{{ .Values.configValues.containerPorts.http }}'
+      extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+      extraEnvVarsSecret:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 1Gi
+        requests:
+          cpu: 50m
+          memory: 1Gi
+      containerPorts:
+        http: 8080
+        https: 443
+      livenessProbe:
+        enabled: true
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 3
+        successThreshold: 1
+      readinessProbe:
+        enabled : false
+      startupProbe:
+        enabled : false
+    env:
+      logLevel: info
+      logPrettyPrintEnabled: false
+      responseCompressionEnabled: true
+      requestPayloadLimit: 1mb
+      gitSslNoVerify: true
+      classifiedRepoUrl: https://github.com/MapColonies/lookup-tables-data
+    route:
+      enabled: true
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+      timeout:
+        enabled: false
+        duration: 60s
+      hostname:
+      path: /
+      targetPort: http
+      tls:
+        enabled: true
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+        useCerts: false
+      extraRules:
+    ingress:
+      enabled: false
+      # apiVersion: ""
+      # type: nginx-kubernetes
+      # annotations: {}
+      # pathType: Prefix
+      # hostname: COMPONENT_NAME.local
+      # extraHosts: []
+      # extraPaths: []
+      # path: /lookup-tables
+      # extraRules: []
+      # extraTls: []
+      # selfSigned: false
+      # tls: true
+      # cors:
+      #   enabled: true
+      #   origin: '*'
+    service:
+      annotations: {}
+      ports:
+        http: 80
+      protocol: TCP
+    serviceAccount:
+      create: false
+      name: ""
+      annotations: {}
+
+  # ====================================================================================================
+  # k8s-services-list
+  # ====================================================================================================
+  k8s-services-list:
+    kubeVersion:
+    commonLabels:
+    commonAnnotations:
+    # ----------- initContainers ----------
+    volumePermissions:
+      enabled: false
+    # ------ volumes and volumeMounts -----
+    persistence:
+      enabled: false
+    # ----------- command/debug -----------
+    diagnosticMode:
+      enabled: false
+      # command:
+      #   - sleep
+      # args:
+      #   - infinity
+    # --------- MAIN_OBJECT_BLOCK ---------
+    configValues:
+      deploymentAnnotations:
+        # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+      autoscaling:
+        enabled: false
+      replicaCount: 1
+      podAnnotations:
+        enabled: true
+        resetOnConfigChange: true
+        annotations: {}
+      prometheus:
+        scrape: false
+      metrics:
+        enabled: false
+      tracing:
+        enabled: false
+      # ----------- containers ------------
+      image:
+        repository: k8s-services-list
+        tag: v1.1.4
+        pullPolicy: Always
+        debug: false
+      containerSecurityContext:
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1000700000
+      extraEnvVars:
+        - name: SERVER_PORT
+          value: '{{ .Values.configValues.containerPorts.http }}'
+      extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+      extraEnvVarsSecret:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 50m
+          memory: 200Mi
+      containerPorts:
+        http: 8080
+        https: 443
+      livenessProbe:
+        enabled: true
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 1
+        failureThreshold: 3
+        successThreshold: 1
+      readinessProbe:
+        enabled : false
+      startupProbe:
+        enabled : false
+    env:
+      logLevel: info
+      logPrettyPrintEnabled: false
+      responseCompressionEnabled: true
+      requestPayloadLimit: 1mb
+    route:
+      enabled: true
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+      timeout:
+        enabled: false
+        duration: 60s
+      hostname:
+      path: /
+      targetPort: http
+      tls:
+        enabled: true
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+        useCerts: false
+      extraRules:
+    ingress:
+      enabled: false
+      # apiVersion: ""
+      # type: nginx-kubernetes
+      # annotations: {}
+      # pathType: Prefix
+      # hostname: COMPONENT_NAME.local
+      # extraHosts: []
+      # extraPaths: []
+      # path: /service-discovery
+      # extraRules: []
+      # extraTls: []
+      # selfSigned: false
+      # tls: true
+      # cors:
+      #   enabled: true
+      #   origin: '*'
+    service:
+      annotations: {}
+      ports:
+        http: 80
+      protocol: TCP
+    serviceAccount:
+      create: true
+      name: ""
+      annotations: {}
+    rbac:
+      create: true
+      rules:
+        - apiGroups:
+            - apps
+          resources:
+            - deployments
+          verbs:
+            - get 
+            - watch
+            - list
+        - apiGroups: 
+            - ""
+          resources:
+            - endpoints 
+            - services
+          verbs:
+            - get 
+            - watch
+            - list
+    podSecurityPolicy:
+      create: false
+      enabled: false
+
+  # ====================================================================================================
+  # mc-thumbnail-generator
+  # ====================================================================================================
+  mc-thumbnail-generator:
+    shared:
+      accessToken:
+        attributeName: token
+        injectionType: queryParam
+        tokenValue: ''
+    kubeVersion:
+    commonLabels:
+    commonAnnotations:
+    # ----------- initContainers ----------
+    volumePermissions:
+      enabled: false
+    # ------ volumes and volumeMounts -----
+    persistence:
+      enabled: false
+    # ----------- command/debug -----------
+    diagnosticMode:
+      enabled: false
+      # command:
+      #   - sleep
+      # args:
+      #   - infinity
+    # --------- MAIN_OBJECT_BLOCK ---------
+    configValues:
+      deploymentAnnotations:
+        # collectord.io/index: '' # PROVIDE SPLUNK INDEX
+      autoscaling:
+        enabled: false
+      replicaCount: 1
+      podAnnotations:
+        enabled: true
+        resetOnConfigChange: true
+        annotations: {}
+      prometheus:
+        scrape: false
+      metrics:
+        enabled: false
+      tracing:
+        enabled: false
+      # ----------- containers ------------
+      image:
+        repository: mc-thumbnail-generator
+        tag: v1.0.21
+        pullPolicy: Always
+        debug: false
+      containerSecurityContext:
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1000700000
+      extraEnvVars:
+        - name: SERVER_PORT
+          value: '{{ .Values.configValues.containerPorts.http }}'
+      extraEnvVarsCM: '{{ template "common.names.fullname" . }}'
+      extraEnvVarsSecret:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 50m
+          memory: 200Mi
+      containerPorts:
+        http: 3000
+        https: 443
+      livenessProbe:
+        enabled: false
+      readinessProbe:
+        enabled : false
+      startupProbe:
+        enabled : false
+      extraVolumeMounts:
+        - name: cesium-client-root-config
+          mountPath: /home/node/app/src/cesiumClientWeb/cesiumClientWebConfig.json
+          subPath: cesiumClientWebConfig.json
+          readOnly: true
+      extraVolumes:
+        - name: cesium-client-root-config
+          configMap:
+            name: '{{ template "common.names.fullname" . }}'
+            items:
+            - key: "CESIUM_CLIENT_WEB_CONFIG"
+              path: "cesiumClientWebConfig.json"
+    env:
+      logLevel: info
+      logPrettyPrintEnabled: false
+      responseCompressionEnabled: true
+      requestPayloadLimit: 1mb
+      defaultAOIBBoxPoints: '[[33.64013671875,33.50475906922609],[37.957763671875,29.065772888415406]]'
+      serviceUrl: http://app-dem-dev-bff-bff/graphql
+      zipName: Thumbnails.zip
+      watermarkTimeout: 90000
+      loadingTilesTimeout: 20000
+    route:
+      enabled: true
+      annotations:
+        haproxy.router.openshift.io/rewrite-target: /
+      timeout:
+        enabled: false
+        duration: 60s
+      hostname:
+      path: /
+      targetPort: http
+      tls: 
+        enabled: true
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+        useCerts: false
+    ingress:
+      enabled: false
+      # apiVersion: ""
+      # type: nginx-kubernetes
+      # annotations: {}
+      # pathType: Prefix
+      # hostname: COMPONENT_NAME.local
+      # extraHosts: []
+      # extraPaths: []
+      # path: /thumbnail-generator
+      # extraRules: []
+      # extraTls: []
+      # selfSigned: false
+      # tls: true
+      # cors:
+      #   enabled: true
+      #   origin: '*'
+    service:
+      annotations: {}
+      ports:
+        http: 80
+      protocol: TCP
+    serviceAccount:
+      create: false
+      name: ""
+      annotations: {}
