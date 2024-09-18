@@ -217,6 +217,9 @@ Params:
   - hostname - String - Optional - Ingress dns.
 */}}
 {{- define "common.secrets.tlsSecretName" -}}
-{{- $hostname := .hostname | default .context.Values.ingress.hostname -}}
+{{- $hostname := .hostname -}}
+{{- if not $hostname -}}
+{{- $hostname := .context.Values.ingress.hostname -}}
+{{- end -}}
 {{- printf "%s-tls" $hostname -}}
 {{- end -}}

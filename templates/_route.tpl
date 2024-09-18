@@ -44,9 +44,9 @@ spec:
     {{- $GLOBAL_TLS_CERTS := include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | fromYamlArray -}}
     {{- range $GLOBAL_TLS_CERTS }}
     {{- if eq .hostname $context.Values.route.hostname }}
-    certificate: .certificate
-    key: .key
-    caCertificate: .caCertificate
+    certificate: {{ .certificate | quote }}
+    key: {{ .key | quote }}
+    caCertificate: {{ .caCertificate | quote }}
     {{- end }}
     {{- end }}
     {{- end }}
