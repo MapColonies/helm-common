@@ -10,7 +10,7 @@ USAGE:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "common.names.fullname" $context }}
+  name: {{ $PERSISTENCE.name }}
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}

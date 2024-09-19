@@ -1,18 +1,16 @@
 {{/*
 USAGE:
-{{ include "mc-chart.tlsCrtSecret" (dict "COMPONENT_NAME" $COMPONENT_NAME "hostname" $hostname "certificate" $certificate "key" $key "context" .) }}
+{{ include "mc-chart.tlsCrtSecret" (dict "COMPONENT_NAME" $COMPONENT_NAME "CERTIFICATE" $CERTIFICATE "context" .) }}
 */}}
 
 {{- define "mc-chart.tlsCrtSecret" -}}
 {{- $context := .context -}}
-{{- $hostname := .hostname -}}
-{{- $certificate := .certificate -}}
-{{- $key := .key -}}
+{{- $CERTIFICATE := .CERTIFICATE -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "common.secrets.tlsSecretName" (dict "context" $context "hostname" $hostname) }}
+  name: {{ include "common.secrets.tlsSecretName" (dict "context" $context "hostname" $CERTIFICATE.hostname) }}
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
@@ -22,6 +20,6 @@ metadata:
   {{- end }}
 type: kubernetes.io/tls
 data:
-  tls.crt: {{ $certificate | b64enc }}
-  tls.key: {{ $key | b64enc }}
+  tls.crt: {{ $CERTIFICATE.certificate | b64enc }}
+  tls.key: {{ $CERTIFICATE.key | b64enc }}
 {{- end }}
