@@ -5,7 +5,7 @@ USAGE:
 
 {{- define "mc-chart.pvc" -}}
 {{- $context := .context -}}
-{{- $PERSISTENCE = .PERSISTENCE -}}
+{{- $PERSISTENCE := .PERSISTENCE -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
