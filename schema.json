@@ -907,6 +907,31 @@
             "title": "configValues",
             "type": "object"
         },
+        "db": {
+            "properties": {
+                "name": {
+                    "default": "******** YOUR_DB_NAME ********",
+                    "description": "db name. IMPORTANT: MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS.",
+                    "title": "db.name",
+                    "type": [
+                        "string"
+                    ]
+                },
+                "schema": {
+                    "default": "public",
+                    "description": "db schema name. IMPORTANT: MIGHT/MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS.",
+                    "title": "db.schema",
+                    "type": [
+                        "string"
+                    ]
+                }
+            },
+            "required": [
+                "name",
+                "schema"
+            ],
+            "type": "object"
+        },
         "diagnosticMode": {
             "properties": {
                 "enabled": {
@@ -919,135 +944,423 @@
             ]
         },
         "global": {
+            "description": "These params defined and managed by INFRA team",
             "properties": {
-                "cloudProvider": {
-                    "properties": {},
+                "authorization": {
+                    "description": "authorization configuration",
+                    "properties": {
+                        "jwtPublicKeySecretName": {
+                            "default": "map-colonies-jwks",
+                            "description": "jwt public key secret name",
+                            "title": "authorization.jwtPublicKeySecretName",
+                            "type": "string"
+                        },
+                        "opa": {
+                            "description": "authorization OPA configuration",
+                            "properties": {
+                                "customHeaderName": {
+                                    "default": "x-api-key",
+                                    "description": "define http header name which holds token value",
+                                    "title": "authorization.customHeaderName",
+                                    "type": [
+                                        "string"
+                                    ]
+                                },
+                                "enabled": {
+                                    "default": false,
+                                    "description": "is OPA style authorization enabled",
+                                    "title": "authorization.opa.enabled",
+                                    "type": [
+                                        "boolean"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "enabled"
+                            ],
+                            "title": "authorization.opa",
+                            "type": "object"
+                        },
+                        "opala": {
+                            "description": "authorization OPALA configuration",
+                            "properties": {
+                                "enabled": {
+                                    "default": true,
+                                    "description": "is OPALA style authorization enabled",
+                                    "title": "authorization.opala.enabled",
+                                    "type": [
+                                        "boolean"
+                                    ]
+                                },
+                                "token": {
+                                    "description": "OPALA token propregation config",
+                                    "properties": {
+                                        "queryName": {
+                                            "default": "token",
+                                            "description": "OPALA token propregation queryname param",
+                                            "title": "authorization.opala.token.queryName",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "queryName"
+                                    ],
+                                    "title": "authorization.opala.token",
+                                    "type": "object"
+                                },
+                                "url": {
+                                    "default": "",
+                                    "description": "OPALA service URL",
+                                    "title": "authorization.opala.url",
+                                    "type": [
+                                        "string"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "url",
+                                "token"
+                            ],
+                            "title": "authorization.opala",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "opa",
+                        "opala",
+                        "jwtPublicKeySecretName"
+                    ],
+                    "title": "authorization",
                     "type": "object"
                 },
                 "configManagment": {
+                    "description": "configuration for configManagment service",
                     "properties": {
                         "enabled": {
-                            "type": "boolean"
+                            "description": "Whether configManagment service enabled in net/namespace",
+                            "title": "configManagment.enabled",
+                            "type": [
+                                "boolean"
+                            ]
+                        },
+                        "url": {
+                            "default": "",
+                            "description": "configManagment service URL",
+                            "title": "configManagment.url",
+                            "type": [
+                                "string"
+                            ]
                         }
                     },
+                    "required": [
+                        "enabled",
+                        "url"
+                    ],
+                    "title": "configManagment",
                     "type": "object"
                 },
                 "currentSubChart": {
-                    "type": "string"
+                    "description": "Defines which UMBRELLA is currently in deployment, should be injected by --set flag",
+                    "title": "currentSubChart",
+                    "type": [
+                        "string"
+                    ]
+                },
+                "db": {
+                    "description": "db definitions",
+                    "properties": {
+                        "host": {
+                            "default": "******** DB_SERVER(IP/URL) ********",
+                            "description": "db server IP/URL",
+                            "title": "db.host",
+                            "type": [
+                                "string"
+                            ]
+                        },
+                        "port": {
+                            "default": -9999,
+                            "description": "db server port",
+                            "title": "db.port",
+                            "type": [
+                                "number"
+                            ]
+                        },
+                        "secretName": {
+                            "default": "postgres-secret",
+                            "description": "db secret name",
+                            "title": "db.secretName",
+                            "type": "string"
+                        },
+                        "ssl": {
+                            "description": "db ssl configuration",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "rejectUnauthorized": {
+                                    "default": true,
+                                    "description": "db user rejectUnauthorized",
+                                    "title": "db.rejectUnauthorized",
+                                    "type": [
+                                        "boolean"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "rejectUnauthorized"
+                            ],
+                            "title": "db.port",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "host",
+                        "port",
+                        "secretName",
+                        "ssl"
+                    ],
+                    "title": "db",
+                    "type": [
+                        "object"
+                    ]
                 },
                 "deploymentFlavor": {
-                    "type": "string"
+                    "default": "openshift",
+                    "description": "Deployment flavor (if ommited default value is \"minikube\")",
+                    "title": "imagePullSecrets",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "environment": {
+                    "default": "development",
+                    "description": "In which environment will be performed deployment",
+                    "enum": [
+                        "development",
+                        "production",
+                        "test",
+                        "staging"
+                    ],
+                    "title": "environment",
                     "type": "string"
+                },
+                "imagePullSecrets": {
+                    "default": [
+                        "YOUR_IMAGE-PULL-SECRET_1"
+                    ],
+                    "description": "Registry Pull Secret names",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "imagePullSecrets",
+                    "type": [
+                        "array"
+                    ]
                 },
                 "imageRegistry": {
-                    "type": "string"
-                },
-                "ingestion": {
-                    "properties": {
-                        "overrideGlobal": {
-                            "properties": {
-                                "testGlobalVal": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "type": "object"
+                    "description": "Registry URL where docker images are stored",
+                    "title": "imageRegistry",
+                    "type": [
+                        "string"
+                    ]
                 },
                 "metrics": {
+                    "description": "metrics configuration",
                     "properties": {
                         "enabled": {
-                            "type": "boolean"
+                            "description": "Whether metrics collection enabled",
+                            "title": "metrics.enabled",
+                            "type": [
+                                "boolean"
+                            ]
                         },
                         "url": {
-                            "type": "string"
+                            "default": "http://localhost:55681/v1/metrics",
+                            "description": "metrics exposed url",
+                            "title": "metrics.url",
+                            "type": [
+                                "string"
+                            ]
                         }
                     },
+                    "required": [
+                        "enabled",
+                        "url"
+                    ],
+                    "title": "metrics",
                     "type": "object"
                 },
-                "overrideGlobal": {
-                    "properties": {
-                        "testGlobalVal": {
-                            "type": "string"
-                        }
-                    },
-                    "type": "object"
+                "releaseVersion": {
+                    "description": "MapColonies release version",
+                    "title": "releaseVersion",
+                    "type": [
+                        "string"
+                    ]
                 },
-                "serving": {
+                "s3": {
+                    "description": "storage definitions",
                     "properties": {
-                        "heights": {
-                            "properties": {
-                                "overrideGlobal": {
-                                    "properties": {
-                                        "tracing": {
-                                            "properties": {
-                                                "enabled": {
-                                                    "type": "boolean"
-                                                },
-                                                "url1": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                },
-                                "releaseVersion": {
-                                    "type": "string"
-                                },
-                                "testGlobalVal": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
+                        "region": {
+                            "default": "******** S3_REGION ********",
+                            "description": "s3 region.",
+                            "title": "storage.s3.region",
+                            "type": [
+                                "string"
+                            ]
                         },
-                        "overrideGlobal": {
-                            "properties": {
-                                "testGlobalVal": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
+                        "server": {
+                            "default": "******** S3_SERVER(IP/URL) ********",
+                            "description": "s3 server IP/URL",
+                            "title": "storage.s3.server",
+                            "type": [
+                                "string"
+                            ]
+                        },
+                        "serverPort": {
+                            "default": -9999,
+                            "description": "s3 server port",
+                            "title": "storage.s3.serverPort",
+                            "type": [
+                                "number"
+                            ]
+                        },
+                        "serverProto": {
+                            "default": "http",
+                            "description": "s3 server protocol",
+                            "enum": [
+                                "http",
+                                "https"
+                            ],
+                            "title": "storage.s3.serverProto",
+                            "type": "string"
+                        },
+                        "sigVersion": {
+                            "default": 4,
+                            "description": "s3 signature version. https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html",
+                            "title": "storage.s3.sigVersion",
+                            "type": [
+                                "number"
+                            ]
+                        },
+                        "storageClass": {
+                            "type": "string"
+                        },
+                        "style": {
+                            "default": "path",
+                            "description": "s3 path style. https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html",
+                            "enum": [
+                                "path",
+                                "hosted"
+                            ],
+                            "title": "storage.s3.style",
+                            "type": "string"
                         }
                     },
-                    "type": "object"
-                },
-                "testGlobalVal": {
-                    "type": "string"
-                },
-                "testTemplated": {
-                    "type": "string"
+                    "required": [
+                        "server",
+                        "serverPort",
+                        "serverProto",
+                        "region",
+                        "style",
+                        "sigVersion"
+                    ],
+                    "title": "storage.s3",
+                    "type": [
+                        "object"
+                    ]
                 },
                 "tlsCertificates": {
-                    "properties": {
-                        "caCertificate": {
-                            "type": "null"
+                    "description": "TLS certificates per hostname to be \"used in deployment\"/\"created\"",
+                    "items": {
+                        "properties": {
+                            "caCertificate": {
+                                "default": "DUMMY_caCertificate_VALUE_OR_ALIAS",
+                                "description": "caCertificate value or aliased value",
+                                "title": "tlsCertificates.caCertificate",
+                                "type": [
+                                    "string"
+                                ]
+                            },
+                            "certificate": {
+                                "default": "DUMMY_certificate_VALUE_OR_ALIAS",
+                                "description": "hostname(dns) of certificate",
+                                "title": "tlsCertificates.hostname",
+                                "type": [
+                                    "string"
+                                ]
+                            },
+                            "hostname": {
+                                "default": "YOUR_SUB-DOMAIN_1.mapcolonies.net",
+                                "description": "hostname(dns) of certificate",
+                                "title": "tlsCertificates.hostname",
+                                "type": [
+                                    "string"
+                                ]
+                            },
+                            "key": {
+                                "default": "DUMMY_key_VALUE_OR_ALIAS",
+                                "description": "key value or aliased value",
+                                "title": "tlsCertificates.key",
+                                "type": [
+                                    "string"
+                                ]
+                            }
                         },
-                        "certificate": {
-                            "type": "null"
-                        },
-                        "key": {
-                            "type": "null"
-                        }
+                        "required": [
+                            "hostname",
+                            "certificate",
+                            "key",
+                            "caCertificate"
+                        ],
+                        "type": "object"
                     },
-                    "type": "object"
+                    "title": "tlsCertificates",
+                    "type": [
+                        "array",
+                        "null"
+                    ]
                 },
                 "tracing": {
+                    "description": "tracing configuration",
                     "properties": {
                         "enabled": {
-                            "type": "boolean"
+                            "description": "Whether tracing enabled",
+                            "title": "tracing.enabled",
+                            "type": [
+                                "boolean"
+                            ]
                         },
                         "url": {
-                            "type": "string"
+                            "default": "http://localhost:55681/v1/traces",
+                            "description": "traces url",
+                            "title": "tracing.url",
+                            "type": [
+                                "string"
+                            ]
                         }
                     },
+                    "required": [
+                        "enabled",
+                        "url"
+                    ],
+                    "title": "tracing",
                     "type": "object"
                 }
             },
+            "required": [
+                "authorization",
+                "configManagment",
+                "imageRegistry",
+                "imagePullSecrets",
+                "tracing",
+                "metrics",
+                "environment",
+                "releaseVersion",
+                "db"
+            ],
+            "title": ".Values.global",
             "type": "object"
         },
         "ingress": {
@@ -1422,6 +1735,22 @@
                 "timeout"
             ],
             "title": "route",
+            "type": "object"
+        },
+        "s3": {
+            "properties": {
+                "bucket": {
+                    "default": "******** YOUR_BUCKET ********",
+                    "description": "s3 bucket. IMPORTANT: MUST BE OVVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS",
+                    "title": "s3.bucket",
+                    "type": [
+                        "string"
+                    ]
+                }
+            },
+            "required": [
+                "bucket"
+            ],
             "type": "object"
         },
         "service": {

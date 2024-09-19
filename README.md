@@ -16,6 +16,47 @@ Used: https://github.com/losisin/helm-values-schema-json
 
 ## Parameters
 
+### global values
+
+These params are prerequisites and managed by INFRA team per specific network/namespace
+
+| Name                                          | Description                                                                                                       | Value                                                             |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `global.authorization.opa.enabled`            | is OPA style authorization enabled                                                                                | `false`                                                           |
+| `global.authorization.opa.customHeaderName`   | http header name which holds token value                                                                          | `x-api-key`                                                       |
+| `global.authorization.opala.enabled`          | is OPALA style authorization enabled                                                                              | `true`                                                            |
+| `global.authorization.opala.url`              | URL of OPALA service                                                                                              | `http://opala-service.infra-services/v1/data/http/authz/decision` |
+| `global.authorization.opala.token.queryName`  | OPALA token propregation queryname param                                                                          | `token`                                                           |
+| `global.authorization.jwtPublicKeySecretName` | jwt public key secret name                                                                                        | `map-colonies-jwks`                                               |
+| `global.configManagment.enabled`              | configuration for configManagment service                                                                         | `false`                                                           |
+| `global.configManagment.url`                  | configManagment service URL                                                                                       | `CONFIG-MANAGMENT_URL`                                            |
+| `global.imageRegistry`                        | Registry URL where docker images are stored                                                                       | `YOUR_IMAGE-REGISTRY`                                             |
+| `global.imagePullSecrets`                     | Registry Pull Secret names                                                                                        | `["YOUR_IMAGE-PULL-SECRET_1"]`                                    |
+| `global.deploymentFlavor`                     | Deployment flavor (if ommited default value is "minikube")                                                        | `openshift`                                                       |
+| `global.tracing.enabled`                      | configuration for trace collection                                                                                | `false`                                                           |
+| `global.tracing.url`                          | traces url                                                                                                        | `http://localhost:55681/v1/traces`                                |
+| `global.metrics.enabled`                      | configuration for metrics collection                                                                              | `false`                                                           |
+| `global.metrics.url`                          | traces url                                                                                                        | `http://localhost:55681/v1/metrics`                               |
+| `global.environment`                          | In which environment will be performed deployment. Allowed values: "development", "production", "test", "staging" | `development`                                                     |
+| `global.releaseVersion`                       | MapColonies release version                                                                                       | `1.20.2`                                                          |
+| `global.currentSubChart`                      | Defines which UMBRELLA is currently in deployment, should be injected by --set flag                               | `DUMMY_currentSubChart`                                           |
+| `global.s3.server`                            | s3 server IP/URL                                                                                                  | `******** S3_SERVER(IP/URL) ********`                             |
+| `global.s3.serverPort`                        | s3 server port                                                                                                    | `-9999`                                                           |
+| `global.s3.serverProto`                       | s3 server protocol. Allowed values: `http` or `https`                                                             | `http`                                                            |
+| `global.s3.region`                            | s3 region                                                                                                         | `******** S3_REGION ********`                                     |
+| `global.s3.style`                             | s3 path style                                                                                                     | `path`                                                            |
+| `global.s3.sigVersion`                        | s3 signature version                                                                                              | `4`                                                               |
+| `global.s3.storageClass`                      | s3 storage class                                                                                                  | `STANDARD`                                                        |
+| `global.db.host`                              | db server IP/URL                                                                                                  | `******** DB_SERVER(IP/URL) ********`                             |
+| `global.db.port`                              | db server port                                                                                                    | `-9999`                                                           |
+| `global.db.secretName`                        | db server port                                                                                                    | `postgres-secret`                                                 |
+| `global.db.ssl.enabled`                       | is db ssl enabled                                                                                                 | `false`                                                           |
+| `global.db.ssl.rejectUnauthorized`            | db user rejectUnauthorized                                                                                        | `true`                                                            |
+| `global.tlsCertificates[0].hostname`          | hostname(dns) of certificate                                                                                      | `YOUR_SUB-DOMAIN_1.mapcolonies.net`                               |
+| `global.tlsCertificates[0].certificate`       | certificate value or aliased value                                                                                | `DUMMY_certificate_VALUE_OR_ALIAS`                                |
+| `global.tlsCertificates[0].key`               | key value or aliased value                                                                                        | `DUMMY_key_VALUE_OR_ALIAS`                                        |
+| `global.tlsCertificates[0].caCertificate`     | caCertificate value or aliased value                                                                              | `DUMMY_caCertificate_VALUE_OR_ALIAS`                              |
+
 ### shared parameters
 
 These params are shared between different sections.
@@ -121,6 +162,9 @@ This description starts in a new line instead of the same line of description st
 | `configValues.extraVolumes`                                   | Optionally specify extra list of additional volumes for the pods                                                                                                                                                                     | `[]`                                       |
 | `configValues.extraVolumeMounts`                              | Optionally specify extra list of additional volumeMounts for the containers                                                                                                                                                          | `[]`                                       |
 | `configValues.sidecars`                                       | Add additional sidecar containers to the pods                                                                                                                                                                                        | `[]`                                       |
+| `db.name`                                                     | db name                                                                                                                                                                                                                              | `******** YOUR_DB_NAME ********`           |
+| `db.schema`                                                   | db schema name                                                                                                                                                                                                                       | `public`                                   |
+| `s3.bucket`                                                   | s3 bucket. IMPORTANT: MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS.                                                                                                                                                        | `******** YOUR_S3_BUCKET ********`         |
 
 ### route parameters
 
