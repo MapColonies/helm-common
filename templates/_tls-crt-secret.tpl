@@ -4,10 +4,10 @@ USAGE:
 */}}
 
 {{- define "mc-chart.tlsCrtSecret" -}}
-{{- $context := .context }}
-{{- $hostname := .hostname }}
-{{- $certificate := .certificate }}
-{{- $key := .key }}
+{{- $context := .context -}}
+{{- $hostname := .hostname -}}
+{{- $certificate := .certificate -}}
+{{- $key := .key -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 apiVersion: v1
 kind: Secret

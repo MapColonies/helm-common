@@ -4,7 +4,7 @@ USAGE:
 */}}
 
 {{- define "mc-chart.service" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $MAIN_OBJECT_BLOCK := get $context.Values .MAIN_OBJECT_BLOCK -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 apiVersion: {{ include "common.capabilities.service.apiVersion" $context }}

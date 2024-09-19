@@ -5,8 +5,8 @@ USAGE:
 
 
 {{- define "mc-chart.role" -}}
-{{- $COMPONENT_NAME := .COMPONENT_NAME }}
-{{- $context := .context }}
+{{- $context := .context -}}
+{{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.rbac.create }}
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" $context }}
 kind: Role

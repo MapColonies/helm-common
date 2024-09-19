@@ -5,8 +5,8 @@ USAGE:
 
 
 {{- define "mc-chart.serviceAccount" -}}
-{{- $COMPONENT_NAME := .COMPONENT_NAME }}
-{{- $context := .context }}
+{{- $context := .context -}}
+{{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.serviceAccount.create }}
 apiVersion: v1
 kind: ServiceAccount

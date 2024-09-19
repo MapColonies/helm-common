@@ -4,7 +4,7 @@ USAGE:
 */}}
 
 {{- define "mc-chart.route" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.route.enabled }}
 apiVersion: {{ include "common.capabilities.route.apiVersion" $context }}

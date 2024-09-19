@@ -4,10 +4,9 @@ USAGE:
 */}}
 
 {{- define "mc-chart.deployment" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- $MAIN_OBJECT_BLOCK := get $context.Values .MAIN_OBJECT_BLOCK -}}
- 
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" $context }}
 kind: Deployment
 metadata:
@@ -24,6 +23,7 @@ spec:
   {{- if not $MAIN_OBJECT_BLOCK.autoscaling.enabled }}
   replicas: {{ $MAIN_OBJECT_BLOCK.replicaCount }}
   {{- end }}
+  revisionHistoryLimit: {{ default 5 $MAIN_OBJECT_BLOCK.revisionHistoryLimit }}
   {{- if $MAIN_OBJECT_BLOCK.updateStrategy }}
   strategy: {{- toYaml $MAIN_OBJECT_BLOCK.updateStrategy | nindent 4 }}
   {{- end }}
@@ -66,8 +66,12 @@ spec:
       affinity: {{- include "common.tplvalues.render" ( dict "value" $MAIN_OBJECT_BLOCK.affinity "context" $context) | nindent 8 }}
       {{- else }}
       affinity:
+        {{- if or (eq $MAIN_OBJECT_BLOCK.podAffinityPreset "soft") (eq $MAIN_OBJECT_BLOCK.podAffinityPreset "hard") }}
         podAffinity: {{- include "common.affinities.pods" (dict "type" $MAIN_OBJECT_BLOCK.podAffinityPreset "component" $COMPONENT_NAME "customLabels" $podLabels "context" $context) | nindent 10 }}
+        {{- end }}
+        {{- if or (eq $MAIN_OBJECT_BLOCK.podAntiAffinityPreset "soft") (eq $MAIN_OBJECT_BLOCK.podAntiAffinityPreset "hard") }}
         podAntiAffinity: {{- include "common.affinities.pods" (dict "type" $MAIN_OBJECT_BLOCK.podAntiAffinityPreset "component" $COMPONENT_NAME "customLabels" $podLabels "context" $context) | nindent 10 }}
+        {{- end }}
         {{- if $MAIN_OBJECT_BLOCK.nodeAffinityPreset }}
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.type "key" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.key "values" $MAIN_OBJECT_BLOCK.nodeAffinityPreset.values) | nindent 10 }}
         {{- end }}

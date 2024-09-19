@@ -4,10 +4,10 @@ USAGE:
 */}}
 
 {{- define "mc-chart.secret" -}}
-{{- $context := .context }}
-{{- $name := .name }}
-{{- $type := .type }}
-{{- $data := .data }}
+{{- $context := .context -}}
+{{- $name := .name -}}
+{{- $type := .type -}}
+{{- $data := .data -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 apiVersion: v1
 kind: Secret

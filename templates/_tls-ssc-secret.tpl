@@ -4,13 +4,13 @@ USAGE:
 */}}
 
 {{- define "mc-chart.tlsSscSecret" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if and $context.Values.ingress.enabled $context.Values.ingress.tls $context.Values.ingress.selfSigned }}
-{{- $secretName := include "common.secrets.tlsSecretName" (dict "context" $context) }}
-{{- $caName := printf "%s-ca" $COMPONENT_NAME }}
-{{- $ca := genCA $caName 365 }}
-{{- $cert := genSignedCert $context.Values.ingress.hostname nil (list $context.Values.ingress.hostname) 365 $ca }}
+{{- $secretName := include "common.secrets.tlsSecretName" (dict "context" $context) -}}
+{{- $caName := printf "%s-ca" $COMPONENT_NAME -}}
+{{- $ca := genCA $caName 365 -}}
+{{- $cert := genSignedCert $context.Values.ingress.hostname nil (list $context.Values.ingress.hostname) 365 $ca -}}
 apiVersion: v1
 kind: Secret
 metadata:
