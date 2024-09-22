@@ -4,14 +4,13 @@ USAGE:
 */}}
 
 {{- define "mc-chart.configmap" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- $DATA := .DATA -}}
 {{- $WITH_TELEMETRY_TRACING := .WITH_TELEMETRY_TRACING -}}
 {{- $WITH_TELEMETRY_METRICS := .WITH_TELEMETRY_METRICS -}}
-{{- $TRACING_OBJECT := include "common.tplvalues.getGlobalObject" (dict "objName" "tracing" "context" $context) | fromYaml }}
-{{- $METRICS_OBJECT := include "common.tplvalues.getGlobalObject" (dict "objName" "metrics" "context" $context) | fromYaml }}
- 
+{{- $TRACING_OBJECT := include "common.tplvalues.getGlobalObject" (dict "objName" "tracing" "context" $context) | fromYaml -}}
+{{- $METRICS_OBJECT := include "common.tplvalues.getGlobalObject" (dict "objName" "metrics" "context" $context) | fromYaml -}}
 apiVersion: {{ include "common.capabilities.configmap.apiVersion" $context }}
 kind: ConfigMap
 metadata:

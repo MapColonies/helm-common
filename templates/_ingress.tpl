@@ -4,7 +4,7 @@ USAGE:
 */}}
 
 {{- define "mc-chart.ingress" -}}
-{{- $context := .context }}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.ingress.enabled }}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" $context }}

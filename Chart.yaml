@@ -7,7 +7,7 @@ keywords:
   - helper
   - template
   - function
-name: common
+name: helm-common
 type: library
 version: 1.0.1
 dependencies:

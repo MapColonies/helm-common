@@ -4,9 +4,9 @@ USAGE:
 */}}
 
 {{- define "mc-chart.service" -}}
-{{- $context := .context }}
-{{- $MAIN_OBJECT_BLOCK := get $context.Values .MAIN_OBJECT_BLOCK -}}
+{{- $context := .context -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
+{{- $MAIN_OBJECT_BLOCK := get $context.Values .MAIN_OBJECT_BLOCK -}}
 apiVersion: {{ include "common.capabilities.service.apiVersion" $context }}
 kind: Service
 metadata:
