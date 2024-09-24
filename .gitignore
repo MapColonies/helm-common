@@ -1,5 +1,7 @@
 # helm chart package
 *.tgz
 
+/global_and_values.yaml
+
 # dependencies
 /node_modules

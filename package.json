@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "helm plugin install https://github.com/losisin/helm-values-schema-json.git",
-    "gen-readme": "readme-generator -r ./README.md -v ./values.yaml",
-    "gen-schema": "helm schema -input ./values.yaml -output ./schema.json"
+    "concat-values": "concat -o ./global_and_values.yaml ./global.yaml ./values.yaml",
+    "gen-readme": "npm run concat-values && readme-generator -r ./README.md -v ./global_and_values.yaml",
+    "gen-schemas": "helm schema -input ./values.yaml -output ./schemas/values-schema.json && helm schema -input ./global.yaml -output ./schemas/global-schema.json"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/MapColonies/helm-common#readme",
   "devDependencies": {
-    "@bitnami/readme-generator-for-helm": "^2.6.1"
+    "@bitnami/readme-generator-for-helm": "^2.6.1",
+    "concat": "^1.0.3"
   }
 }
