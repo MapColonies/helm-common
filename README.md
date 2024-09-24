@@ -3,15 +3,13 @@
 In order to re-generate README.md (params based on values.yaml commented by [# @param])<br/>
 Used: https://github.com/bitnami/readme-generator-for-helm
 ```
-   readme-generator-for-helm -r ../helm-common/README.md -v ../helm-common/values.yaml 
-
-   readme-generator-for-helm -s ../helm-common/schema.json -v ../helm-common/values.yaml
+    npm run gen-readme
 ```
 
-In order to re-generate schema.json (based on values.yaml commented by [# @schema]) <br/>
+In order to re-generate schemas (based on global.yaml and values.yaml commented by [# @schema]) <br/>
 Used: https://github.com/losisin/helm-values-schema-json
 ```
-    helm schema -input values.yaml -output schema.json
+    npm run gen-schemas
 ```
 
 ## Parameters
