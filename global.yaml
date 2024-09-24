@@ -1,0 +1,226 @@
+## @section global values
+## @descriptionStart
+## These params are prerequisites and managed by INFRA team per specific network/namespace
+## @descriptionEnd
+
+global: # @schema required: false ; title: .Values.global ; description: These params defined and managed by INFRA team
+  authorization: # @schema required: true ; title: authorization ; description: authorization configuration
+    opa: # @schema required: true ; title: authorization.opa ; description: authorization OPA configuration
+      ## @param global.authorization.opa.enabled is OPA style authorization enabled 
+      ##
+      enabled: false # @schema required: true ; default: false ; type: [boolean] ; title: authorization.opa.enabled ; description: is OPA style authorization enabled 
+      ## @param global.authorization.opa.customHeaderName http header name which holds token value
+      ##
+      customHeaderName: "x-api-key" # @schema default: "x-api-key" ; type: [string] ; title: authorization.customHeaderName ; description: define http header name which holds token value
+    opala: # @schema required: true ; title: authorization.opala ; description: authorization OPALA configuration
+      ## @param global.authorization.opala.enabled is OPALA style authorization enabled 
+      ##
+      enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: authorization.opala.enabled ; description: is OPALA style authorization enabled
+      ## @param global.authorization.opala.url URL of OPALA service  
+      ##
+      url: http://opala-service.infra-services/v1/data/http/authz/decision # @schema required: true ; default: "" ; type: [string] ; title: authorization.opala.url ; description: OPALA service URL
+      token: # @schema required: true ; title: authorization.opala.token ; description: OPALA token propregation config
+        ## @param global.authorization.opala.token.queryName OPALA token propregation queryname param
+        ##
+        queryName: token # @schema required: true ; default: "token" ; title: authorization.opala.token.queryName ; description: OPALA token propregation queryname param
+    ## @param global.authorization.jwtPublicKeySecretName jwt public key secret name 
+    ##
+    jwtPublicKeySecretName: map-colonies-jwks # @schema required: true ; default: "map-colonies-jwks" ; title: authorization.jwtPublicKeySecretName ; description: jwt public key secret name 
+  configManagment: # @schema required: true ; title: configManagment ; description: configuration for configManagment service
+    ## @param global.configManagment.enabled configuration for configManagment service
+    ##
+    enabled: false # @schema required: true ; type: [boolean] ; title: configManagment.enabled ; description: Whether configManagment service enabled in net/namespace
+    ## @param global.configManagment.url configManagment service URL
+    ##
+    url: CONFIG-MANAGMENT_URL # @schema required: true ; default: "" ; type: [string] ; title: configManagment.url ; description: configManagment service URL
+  ## @param global.imageRegistry Registry URL where docker images are stored
+  ## 
+  imageRegistry: YOUR_IMAGE-REGISTRY # @schema required: true ; defdault: "YOUR_IMAGE-REGISTRY" ; type: [string] ; title: imageRegistry ; description: Registry URL where docker images are stored
+  ## @param global.imagePullSecrets Registry Pull Secret names
+  ## 
+  imagePullSecrets: # @schema required: true ; type: [array] ; default: ["YOUR_IMAGE-PULL-SECRET_1"] ; title: imagePullSecrets ; description: Registry Pull Secret names
+    - YOUR_IMAGE-PULL-SECRET_1
+  ## @param global.deploymentFlavor Deployment flavor (if ommited default value is "minikube")
+  ## 
+  deploymentFlavor: openshift # @schema type: [string, null] ; default: "openshift" ; title: imagePullSecrets ; description: Deployment flavor (if ommited default value is "minikube")
+  tracing: # @schema required: true ; title: tracing ; description: tracing configuration
+    ## @param global.tracing.enabled configuration for trace collection
+    ##
+    enabled: false # @schema required: true ; type: [boolean] ; title: tracing.enabled ; description: Whether tracing enabled 
+    ## @param global.tracing.url traces url
+    ##
+    url: http://localhost:55681/v1/traces # @schema required: true ; default: "http://localhost:55681/v1/traces" ; type: [string] ; title: tracing.url ; description: traces url 
+  metrics: # @schema required: true ; title: metrics ; description: metrics configuration
+    ## @param global.metrics.enabled configuration for metrics collection
+    ##
+    enabled: false # @schema required: true ; type: [boolean] ; title: metrics.enabled ; description: Whether metrics collection enabled 
+    ## @param global.metrics.url traces url
+    ##
+    url: http://localhost:55681/v1/metrics # @schema required: true ; default: "http://localhost:55681/v1/metrics" ; type: [string] ; title: metrics.url ; description: metrics exposed url 
+  ## @param global.environment In which environment will be performed deployment. Allowed values: "development", "production", "test", "staging"
+  ##
+  environment: development # @schema required: true ; default: "development" ; enum: ["development", "production", "test", "staging"] ; title: environment ; description: In which environment will be performed deployment
+  ## @param global.releaseVersion MapColonies release version
+  ##
+  releaseVersion: 1.20.2 # @schema required: true ; type: [string] ; title: releaseVersion ; description: MapColonies release version
+  ## @param global.currentSubChart Defines which UMBRELLA is currently in deployment, should be injected by --set flag
+  ##
+  currentSubChart: DUMMY_currentSubChart # @schema type: [string] ; title: currentSubChart ; description: Defines which UMBRELLA is currently in deployment, should be injected by --set flag
+  ##
+  s3: # @schema type:[object] ; title: storage.s3 ; description: storage definitions
+    ## @param global.s3.server s3 server IP/URL
+    ##
+    server: '******** S3_SERVER(IP/URL) ********' # @schema required: true ; default: "******** S3_SERVER(IP/URL) ********" ; type:[string] ; title: storage.s3.server ; description: s3 server IP/URL
+    ## @param global.s3.serverPort s3 server port
+    ##
+    serverPort: -9999 # @schema required: true ; default: -9999 ; type:[number] ; title: storage.s3.serverPort ; description: s3 server port
+    ## @param global.s3.serverProto s3 server protocol. Allowed values: `http` or `https`
+    ##
+    serverProto: http # @schema required: true ; default: "http" ; enum:["http", "https"] ; title: storage.s3.serverProto ; description: s3 server protocol
+    ## @param global.s3.region s3 region
+    ##
+    region: '******** S3_REGION ********' # @schema required: true ; default: "******** S3_REGION ********" ; type:[string] ; title: storage.s3.region ; description: s3 region.
+    ## @param global.s3.style s3 path style
+    ## ref: https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html
+    ##
+    style: path # @schema required: true ; default: "path" ; enum:["path", "hosted"] ; title: storage.s3.style ; description: s3 path style. https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html
+    ## @param global.s3.sigVersion s3 signature version
+    ## ref: https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html
+    ##
+    sigVersion: 4 # @schema required: true ; default: 4 ; type:[number] ; title: storage.s3.sigVersion ; description: s3 signature version. https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+    ## @param global.s3.storageClass s3 storage class
+    ## ref: https://www.ibm.com/docs/en/ahts/4.4.x?topic=scias-setting-amazon-s3-storage-class-options
+    ##
+    storageClass: "STANDARD" # @schema required: true ; default: "STANDARD" ; enum: ["STANDARD", "REDUCED_REDUNDANCY","INFREQUENT_ACCESS","ONEZONE_IA", "INTELLIGENT_TIERING","GLACIER","DEEP_ARCHIVE", "GLACIER_IR"] ; title: s3.storageClass ; description: s3 storage class. https://www.ibm.com/docs/en/ahts/4.4.x?topic=scias-setting-amazon-s3-storage-class-options
+  db: # @schema required: true ; type:[object] ; title: db ; description: db definitions
+    ## @param global.db.host db server IP/URL
+    ##
+    host: '******** DB_SERVER(IP/URL) ********' # @schema required: true ; default: "******** DB_SERVER(IP/URL) ********" ; type:[string] ; title: db.host ; description: db server IP/URL
+    ## @param global.db.port db server port
+    ##
+    port: -9999 # @schema required: true ; default: -9999 ; type:[number] ; title: db.port ; description: db server port
+    ## @param global.db.secretName db server port
+    ##
+    secretName: postgres-secret # @schema required: true ; default: "postgres-secret" ; title: db.secretName ; description: db secret name 
+    ssl: # @schema required: true ; title: db.port ; description: db ssl configuration
+      ## @param global.db.ssl.enabled is db ssl enabled
+      ##
+      enabled: false
+      ## @param global.db.ssl.rejectUnauthorized db user rejectUnauthorized
+      ##
+      rejectUnauthorized: true # @schema required: true ; default: true; type:[boolean] ; title: db.rejectUnauthorized ; description: db user rejectUnauthorized
+  ##
+  tlsCertificates: # @schema type:[array, null] ; title: tlsCertificates ; description: Secrets for TLS certificates per hostname to be "used in deployment"/"created"
+    - 
+      ## @param global.tlsCertificates[0].hostname hostname(dns) of certificate
+      ##
+      hostname: YOUR_SUB-DOMAIN_1.mapcolonies.net # @schema required: true; default: "YOUR_SUB-DOMAIN_1.mapcolonies.net" ; type: [string]; title: tlsCertificates.hostname ; description: hostname(dns) of certificate
+      ## @param global.tlsCertificates[0].certificate certificate value or aliased value
+      ##
+      certificate: DUMMY_certificate_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_certificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.hostname ; description: hostname(dns) of certificate
+      ## @param global.tlsCertificates[0].key key value or aliased value
+      ##
+      key: DUMMY_key_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_key_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.key ; description: key value or aliased value
+      ## @param global.tlsCertificates[0].caCertificate caCertificate value or aliased value
+      ##
+      caCertificate: DUMMY_caCertificate_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_caCertificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.caCertificate ; description: caCertificate value or aliased value
+  ##
+  secrets: # @schema type:[array, null] ; title: secrets ; description: List of Infra Secrets that are common for all domains/teams 
+    - 
+      ## @param global.secrets[0].name secret name 
+      ##
+      name: postgres-secret # @schema required: true; default: "postgres-secret" ; type: [string]; title: secrets[0].name ; description: secret name
+      ## @param global.secrets[0].type secret type 
+      ## ref: https://kubernetes.io/docs/concepts/configuration/secret/
+      ##
+      type: Opaque # @schema required: true; default: "Opaque" ; enum: ["Opaque","kubernetes.io/service-account-token","kubernetes.io/dockercfg","kubernetes.io/dockerconfigjson","kubernetes.io/basic-auth","kubernetes.io/ssh-auth","kubernetes.io/tls","bootstrap.kubernetes.io/token"]; title: secrets[0].type ; description: secret type. https://kubernetes.io/docs/concepts/configuration/secret/
+      ## @param global.secrets[0].path secret path. Root folder path where secret's ALL data, if needed, will be kept in pod
+      ##
+      path: # @schema type: [string]; title: secrets[0].path ; description: secret path. Root folder path where secret's ALL data, if needed, will be kept in pod
+      ## Secret data. Array of [key, value] pairs
+      ## ref: https://kubernetes.io/docs/concepts/configuration/secret/
+      ##
+      data:  # @schema type:[array] ; required: true; title: secrets[0].data ; description: Array of [key, value] pairs
+        - 
+          ## @param global.secrets[0].data[0].key data key name 
+          ##
+          key: username # @schema required: true; type: [string]; title: global.secrets[0].data[0].key ; description: secret key name
+          ## @param global.secrets[0].data[0].value data key value 
+          ##
+          value: DB_USER_NAME # @schema required: true; type: [number, boolean, string]; title: global.secrets[0].data[0].value ; description: secret key value
+        - 
+          ## @param global.secrets[0].data[1].key data key name 
+          ##
+          key: password
+          ## @param global.secrets[0].data[1].value data key value 
+          ##
+          value: DB_USER_PASSWORD
+        - 
+          ## @param global.secrets[0].data[2].key data key name 
+          ##
+          key: caFileName
+          ## @param global.secrets[0].data[2].value data key value 
+          ##
+          value: CA_FILE_NAME
+        - 
+          ## @param global.secrets[0].data[3].key data key name 
+          ##
+          key: certFileName
+          ## @param global.secrets[0].data[3].value data key value 
+          ##
+          value: CERT_FILE_NAME
+        - 
+          ## @param global.secrets[0].data[4].key data key name 
+          ##
+          key: keyFileName
+          ## @param global.secrets[0].data[4].value data key value 
+          ##
+          value: KEY_FILE_NAME
+    # - name: root-ca
+    #   type: Opaque
+    #   path: '/usr/local/share/ca-certificates'
+    #   data:
+    #     - key: ca.crt
+    #       value: CA_CERT_VALUE
+  ##
+  persistences: # @schema type:[array, null] ; title: persistences ; description: List of Infra PVC that are common for all domains/teams 
+    - 
+      ## @param global.persistences[0].name pvc name 
+      ##
+      name: internal-pvc-nfs # @schema required: true; type: [string]; title: persistences[0].name ; description: pvc name
+      ## @param global.persistences[0].accessModes pvc access Modes. Allowed values: `ReadWriteOnce`, `ReadOnlyMany`, `ReadWriteMany`, `ReadWriteOncePod`
+      ##
+      accessModes: # @schema required: true; default: ["ReadWriteMany"]; type: [array]; title: persistences[0].accessModes ; description: pvc accessmodes. Allowed values: `ReadWriteOnce`, `ReadOnlyMany`, `ReadWriteMany`, `ReadWriteOncePod`
+        - ReadWriteMany
+      ## @param global.persistences[0].size pvc size. 
+      ##
+      size: 50Gi # @schema required: true; default: "50Gi"; type: [string]; title: persistences[0].size ; description: pvc size.
+      ## @param global.persistences[0].storageClassName pvc storage className (created by net managers). 
+      ##
+      storageClassName: nfs # @schema required: true; default: "nfs"; type: [string]; title: persistences[0].size ; description: pvc storage className (created by net managers). 
+  # ## TEST START
+  # testTemplated: '{{ include "common.names.name" . }}'
+  # ##$$ Tracing configuration
+  # ##$$ @param global.tracing
+  # ##$$ E.g
+  # ##$$ tracing:
+  # ##$$  enabled: true
+  # ##$$  url: http://otel-collector:4318/v1/traces
+  # ##$$
+  # testGlobalVal: info_GLOBAL
+  # overrideGlobal:
+  #   testGlobalVal: info_GLOBAL_OVER
+  # serving:
+  #   overrideGlobal:
+  #     testGlobalVal: info_GLOBAL_SERVING_OVER
+  #   heights:
+  #       overrideGlobal:
+  #         tracing:
+  #           enabled: true
+  #           url1: CHART_http://otel-collector:4318/v1/traces
+  #       releaseVersion: 'releaseVersion_OVER'
+  #       testGlobalVal: info_GLOBAL_SERVING_HEIGHTS_OVER
+  # ingestion:
+  #   overrideGlobal:
+  #     testGlobalVal: info
+  # ## TEST END

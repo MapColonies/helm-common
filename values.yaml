@@ -1,4 +1,701 @@
-## It is required by helm lint to pass tools and processes.
-## @skip exampleValue
+# ----------- SHARED FOR DIFFERENT SECTIONS ----------
+## @section shared parameters
+## @descriptionStart
+## These params are shared between different sections.
+## @descriptionEnd
+## @param kubeVersion [string] Kubernetes version
+kubeVersion: # @schema type: [string, null] ; title: kubeVersion ; description: >= 1.13.0 < 1.15.0 
+## @param commonLabels [object] Labels to add for all k8s resources
+commonLabels:  # @schema required: true ; type: [object, null] ; title: commonLabels ; description: Labels to add for all k8s resources
+## @param commonAnnotations [object] Annotations to add for all k8s resources
+commonAnnotations: # @schema required: true ; type: [object, null] ; title: commonAnnotations ; description: Annotations to add for all k8s resources
+# ----------- initContainers ----------
+## volumePermissions 
+volumePermissions: # @schema required: true ; type: [object] ; title: volumePermissions
+  ## @param volumePermissions.enabled Is initContainers "process" should be included
+  enabled: false  # @schema required: true ; type: [boolean] ; title: volumePermissions.enabled ; description: Is "shared" initContainers defined. Will be included if volumePermissions.enabled && persistence.enabled
+# ------ volumes and volumeMounts -----
+## Persistence
+persistence: # @schema required: true ; type: [object] ; title: persistence
+  ## @param persistence.enabled Is initContainers "process" should be included also volumes are defined 
+  enabled: false # @schema required: true ; type: [boolean] ; title: persistence.enabled ; description: Is "shared" persistance defined
+# ----------- command/debug -----------
+## diagnosticMode
+diagnosticMode: # @schema required: true ; type: [object] ; title: diagnosticMode
+  ## @param diagnosticMode.enabled Is container command/args should be defined
+  enabled: false
+
+# ----------- DEPLOYMENT (MAIN_OBJECT_BLOCK) ----------
+## @section configValues parameters
+## @descriptionStart
+## This description starts in a new line instead of the same line of description start tag. It does not have multiple lines.
+## @descriptionEnd
+configValues: # @schema required: true ; title: configValues ; description: Deployment configuration (MAIN_OBJECT_BLOCK)
+  ## @param configValues.deploymentAnnotations Annotations for deployment
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ## E.g. PROVIDE SPLUNK INDEX
+  ## deploymentAnnotations:
+  ##   collectord.io/index: ''
+  deploymentAnnotations: {} # @schema required: true ; default: {} ; type: [object] ; title: deploymentAnnotations ; description: Annotations for deployment https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ## Autoscaling configuration
+  ## ref: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+  ##
+  autoscaling: # @schema required: true ; title: autoscaling ; description: Autoscaling configuration https://kubernetes.io/docs/concepts/workloads/autoscaling/
+    ## @param configValues.autoscaling.enabled Is autoscaling defined for pods (currently should be FALSE, TRUE still not tested)
+    enabled: false # @schema type: [boolean] ; default: false ; title: autoscaling.enabled ; description: Is autoscaling defined for pods (currently should be FALSE, TRUE still not tested)
+    ## @param configValues.autoscaling.vpa.enabled Enable VPA for pods (currently should be FALSE, TRUE still not tested)
+    ## @param configValues.autoscaling.vpa.annotations Annotations for VPA resource
+    ## @param configValues.autoscaling.vpa.controlledResources VPA List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+    ## @param configValues.autoscaling.vpa.maxAllowed VPA Max allowed resources for the pod
+    ## @param configValues.autoscaling.vpa.minAllowed VPA Min allowed resources for the pod
+    ##
+    vpa: # @schema title: vpa ; description: VPA configuration for pods https://kubernetes.io/docs/tasks/configure-pod-container/resize-container-resources/
+      enabled: false # @schema default: false ; type: [boolean] ; title: vpa.enabled ; description: Enable VPA for pods (currently should be FALSE, TRUE still not tested)
+      annotations: {} # @schema type: [object] ; title: vpa.annotations ; description: Annotations for VPA resource
+      controlledResources: [] # @schema type: [array] ; title: vpa.controlledResources ; description: VPA List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+      maxAllowed: {} # @schema type: [object] ; title: vpa.maxAllowed ; description: VPA Max allowed resources for the pod
+      minAllowed: {} # @schema type: [object] ; title: vpa.minAllowed ; description: VPA Min allowed resources for the pod
+      ## @param configValues.autoscaling.vpa.updatePolicy.updateMode Autoscaling update policy
+      ## Specifies whether recommended updates are applied when a Pod is started and whether recommended updates are applied during the life of a Pod
+      ## Possible values are "Off", "Initial", "Recreate", and "Auto".
+      ##
+      updatePolicy: # @schema type: [object] ; title: vpa.updatePolicy ; description: Autoscaling update policy
+        updateMode: "Auto" # @schema required: true ; default: "Auto" ; enum: ["Off", "Initial", "Recreate", "Auto"] ; title: vpa.updatePolicy.updateMode ; description: Specifies whether recommended updates are applied when a Pod is started and whether recommended updates are applied during the life of a Pod
+    ## @param configValues.autoscaling.hpa.enabled Enable HPA for pods
+    ## ref: https://kubernetes.io/docs/tutorials/kubernetes-basics/scale/scale-intro/
+    ## @param configValues.autoscaling.hpa.minReplicas Minimum number of replicas
+    ## @param configValues.autoscaling.hpa.maxReplicas Maximum number of replicas
+    ## @param configValues.autoscaling.hpa.targetCPU Target CPU utilization percentage
+    ## @param configValues.autoscaling.hpa.targetMemory Target Memory utilization percentage
+    ##
+    hpa: # @schema title: hpa ; description: HPA configuration for pods https://kubernetes.io/docs/tutorials/kubernetes-basics/scale/scale-intro/
+      enabled: false # @schema type: [boolean] ; title: hpa.enabled ; description: Enable HPA for pods
+      minReplicas: 1 # @schema type: [number] ; title: hpa.minReplicas ; description: Minimum number of replicas
+      maxReplicas: 1 # @schema type: [number] ; title: hpa.maxReplicas ; description: Maximum number of replicas
+      targetCPU: 60 # @schema type: [number] ; title: hpa.targetCPU(targetCPUUtilizationPercentage) ; description: Target CPU utilization percentage
+      targetMemory:  # @schema type: [number, null] ; title: hpa.targetMemory(targetMemoryUtilizationPercentage) ; description: Target Memory utilization percentage
+  ## @param configValues.replicaCount Number of replicas to deploy
+  ##
+  replicaCount: 1 # @schema required: true ; default: 1 ; type: [number] ; title: replicaCount ; description: Number of replicas to deploy. Wiil be used if !hpa.enabled
+  ## @param configValues.updateStrategy Update strategy of deploy. For more details see values.yaml
+  ##
+  updateStrategy: {} # @schema type: [object] ; title: updateStrategy ; description: Update strategy of deploy https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+    ## ONLY FOR DEPLOYMENTS:
+    ## @_param configValues.updateStrategy.type deployment strategy type. Can be set to RollingUpdate or Recreate
+    ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+    ## ONLY FOR STATEFULSETS:
+    ## @_param configValues.updateStrategy.type statefulset strategy type. Can be set to RollingUpdate or OnDelete
+    ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+    # type: RollingUpdate
+  ## @param configValues.podLabels Extra labels for pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {} # @schema type: [object] ; title: podLabels ; description: Pod specific labels
+  ## Pod annotations configuration
+  ## @param configValues.podAnnotations.enabled Enable pod annotations
+  ## @param configValues.podAnnotations.resetOnConfigChange Relative annnotation for reset onConfig change   
+  ## @param configValues.podAnnotations.annotations Additional pod annotations      
+  ##
+  podAnnotations: # @schema required: true ; title: podAnnotations ; description: Pod specific annotations
+    enabled: true # @schema type: [boolean] ; default: true ; title: podAnnotations.enabled ; description: Add build-in annotations (checksum / prometheus)
+    resetOnConfigChange: true # @schema type: [boolean] ; default: true ; title: podAnnotations.resetOnConfigChange ; description: Relative annnotation for reset onConfig change
+    annotations: {} # @schema type: [object, null] ; title: podAnnotations.annotations ; description: Additional pod annotations
+  ## Prometheus metrics configuration
+  ## @param configValues.prometheus.scrape Flag for prometheus to scrape service metrics
+  ## @param configValues.prometheus.port If the metrics are exposed on a different port to the service then set this appropriately
+  ## @param configValues.prometheus.path If the metrics path is not `/metrics` override it
+  ## @param configValues.prometheus.scheme If the metrics endpoint is secured then you will need to set this to `https` & most likely set the `tls_config` of the scrape config
+  ## @param configValues.prometheus.params If the metrics endpoint uses query parameters then you can set any parameter (will be added as annotations)
+  ## E.g. prometheus: 
+  ##        params:
+  ##        - format: prometheus
+  ## 
+  prometheus: # @schema title: prometheus ; description: Prometheus metrics configuration
+    scrape: true # @schema type: [boolean] ; title: prometheus.scrape ; description: Flag for prometheus to scrape service metrics
+    port: 8080 # @schema type: [number] ; title: prometheus.port ; description: If the metrics are exposed on a different port to the service then set this appropriately
+    path: /metrics # @schema type: [string] ; title: prometheus.path ; description: If the metrics path is not `/metrics` override it
+    scheme: http # @schema type: [string] ; title: prometheus.scheme ; description: If the metrics endpoint is secured then you will need to set this to `https` & most likely set the `tls_config` of the scrape config
+    params: [] # @schema type: [array] ; title: prometheus.params ; description: If the metrics endpoint uses query parameters then you can set any parameter (will be added as annotations)
+
+  # metrics:
+  #   enabled: true
+  #   url: http://otel-collector:4318/v1/metrics
+  #   prometheus:
+  #     scrape: true
+  #     port: 8080
+  #   buckets:
+  #     - 1
+  #     - 10
+  #     - 50
+  #     - 100
+  #     - 150
+  #     - 250
+
+  ## @param configValues.hostAliases Pods host aliases
+  ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  ## E.g. hostAliases: 
+  ##      - ip: "127.0.0.1"
+  ##        hostnames:
+  ##        - "foo.local"
+  ##        - "bar.local"
+  ##      - ip: "10.1.2.3"
+  ##        hostnames:
+  ##        - "foo.remote"
+  ##        - "bar.remote"
+  ##
+  hostAliases: [] # @schema type: [array] ; title: hostAliases ; description: Pods host aliases
+  ## @param configValues.affinity Affinity for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## NOTE: `configValues.podAffinityPreset`, `configValues.podAntiAffinityPreset`, and `configValues.nodeAffinityPreset` will be ignored when it's set
+  ##
+  affinity: {} # @schema type: [object] ; title: affinity ; description: Affinity for pods assignment. NOTE: `podAffinityPreset`, `podAntiAffinityPreset`, and `nodeAffinityPreset` will be ignored when it's set
+  ## @param configValues.podAffinityPreset Pod affinity preset. Ignored if `configValues.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAffinityPreset: "" # @schema enum: ["soft", "hard", ""] ; title: podAffinityPreset ; description: Pod affinity preset. NOTE: Ignored if `affinity` is set
+  ## @param configValues.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `configValues.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAntiAffinityPreset: soft # @schema enum: ["soft", "hard", ""] ; title: podAffinityPreset ; description: Pod affinity preset. NOTE: Ignored if `affinity` is set
+  ## @param configValues.nodeAffinityPreset Node afinity preset
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+  ## E.g. 
+  ## nodeAffinityPreset:
+  ##    ## @_param configValues.nodeAffinityPreset.type Node affinity preset type. Ignored if `configValues.affinity` is set. Allowed values: `soft` or `hard`
+  ##    ##
+  ##    type: ""
+  ##    ## @_param configValues.nodeAffinityPreset.key Node label key to match. Ignored if `configValues.affinity` is set
+  ##    ##
+  ##    key: ""
+  ##    ## @_param configValues.nodeAffinityPreset.values Node label values to match. Ignored if `configValues.affinity` is set
+  ##    ## E.g.
+  ##    ## values:
+  ##    ##   - e2e-az1
+  ##    ##   - e2e-az2
+  ##    ##
+  ##    values: []
+  ##
+  nodeAffinityPreset: {} # @schema type: [object] ; title: nodeAffinityPreset ; description: Node afinity preset https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+  ## @param configValues.nodeSelector Recommended form of node selection constraint
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ##
+  nodeSelector: {} # @schema type: [object] ; title: nodeSelector ; description: Recommended form of node selection constraint https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ## @param configValues.tolerations Tolerations for pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ## E.g.
+  ## tolerations: 
+  ##   - key: foo
+  ##     operator: Equal
+  ##     value: bar
+  ##
+  tolerations: [] # @schema type: [array] ; title: tolerations ; description: Tolerations for pods assignment https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ## @param configValues.priorityClassName pods' priorityClassName
+  ## ref: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_priorityclass/
+  ##
+  priorityClassName: "" # @schema type: [string] ; title: priorityClassName ; description: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_priorityclass/
+  ## @param configValues.schedulerName Name of the k8s scheduler (other than default) for pods
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  schedulerName: "" # @schema type: [string] ; title: schedulerName ; description: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ## configValues.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
+  ##
+  topologySpreadConstraints: # @schema type:[array, null] ; title: topologySpreadConstraints ; description: Topology Spread Constraints for pod assignment spread across your cluster among failure-domains https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
+    -
+      ## @param configValues.topologySpreadConstraints[0].maxSkew Responsible on Pod placement between zones
+      ##
+      maxSkew: 1 # @schema required: true; default: 1 ; type: [number]; title: topologySpreadConstraints.maxSkew ; description: Responsible on Pod placement between zones
+      ## @param configValues.topologySpreadConstraints[0].topologyKey Responsible on Pod placement between zones
+      ##
+      topologyKey: topology.kubernetes.io/zone # @schema required: true; default: "topology.kubernetes.io/zone" ; enum: ["topology.kubernetes.io/region", "topology.kubernetes.io/zone", "topology.kubernetes.io/node"] ; title: topologyKey ; description: is the key of node labels
+      ## @param configValues.topologySpreadConstraints[0].whenUnsatisfiable Indicates how to deal with a Pod if it doesn't satisfy the spread constraint
+      ##
+      whenUnsatisfiable: DoNotSchedule # @schema default: "DoNotSchedule" ; enum: ["DoNotSchedule", "ScheduleAnyway"] ; title: whenUnsatisfiable ; description: Indicates how to deal with a Pod if it doesn't satisfy the spread constraint
+      ## @param configValues.topologySpreadConstraints[0].labelSelector Is used to find matching Pods
+      ## @skip configValues.topologySpreadConstraints[0].labelSelector
+      ##
+      labelSelector: # @schema required: true ; type:[object] ; title: topologySpreadConstraints.labelSelector 
+        matchLabels: # @schema required: true ;  type:[object] ; title: topologySpreadConstraints.labelSelector.matchLabels
+          app.kubernetes.io/name: "{{ include 'common.names.name' . }}"
+  
+  ## Configure Pods Security Context
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  ## @param configValues.podSecurityContext.enabled Enable pods' Security Context
+  ## @param configValues.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy for pods. Allowed values: Always, OnRootMismatch
+  ## @param configValues.podSecurityContext.sysctls Set kernel settings using the sysctl interface for pods
+  ## @param configValues.podSecurityContext.supplementalGroups Set filesystem extra groups for pods
+  ## @param configValues.podSecurityContext.fsGroup Set fsGroup in pods' Security Context
+  ##
+  podSecurityContext: # @schema required: true ; type:[object] ; title: podSecurityContext ; description: Configure Pods Security Context https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+    enabled: false # @schema default: false ; type: [boolean] ; title: podSecurityContext.enabled ; description: Enable pods' Security Context
+    fsGroup: 1001 # @schema type: [number] ; title: podSecurityContext.fsGroup ; description: Set fsGroup in pods' Security Context
+    fsGroupChangePolicy: Always # @schema enum: ["Always", "OnRootMismatch"] ; title: podSecurityContext.fsGroupChangePolicy ; description:  Set filesystem group change policy for pods
+    sysctls: [] # @schema type:[array] ; title: podSecurityContext.sysctls 
+    supplementalGroups: [] # @schema type:[array] ; title: podSecurityContext.supplementalGroups 
+  ## @param configValues.terminationGracePeriodSeconds Seconds for pods need to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  ##
+  terminationGracePeriodSeconds: "" # @schema type:[string] ; title: terminationGracePeriodSeconds ; description: Seconds for pods need to terminate gracefully https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  ## @param configValues.initContainers Add additional init containers to the pods
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## E.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  ##
+  initContainers: [] # @schema type:[array, null] ; title: initContainers ; description: Add additional init containers to the pods https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## MapColonies image (---- containers ---- deployment section)
+  ## @_param configValues.image.registry Image registry. Taken automatically from GLOBAL, should be overriden when in custom ONLY.
+  ## @param configValues.image.repository Image repository
+  ## @skip configValues.image.tag image tag (immutable tags are recommended)
+  ## @param configValues.image.digest image digest in the way sha256:aa.... Please note this parameter, if set, will override the image tag (immutable tags are recommended)
+  ## @param configValues.image.pullPolicy image pull policy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## @param configValues.image.pullSecrets image pull secrets. Secrets must be manually created in the namespace.
+  ## @param configValues.image.debug Enable image debug mode
+  ##
+  image:  # @schema type:[object] ; required: true ; title: image ; description:  MapColonies image details 
+    # registry: docker.io
+    repository: '******** YOUR_REPO ********' # @schema type:[string] ; default: "******** YOUR_REPO ********" ; required: true ; title: image.repository ; description: Image repository
+    tag: '******** YOUR_REPO_TAG ********' # @schema type:[string] ; required: true ; default: "******** YOUR_REPO_TAG ********" ; title: image.tag ; description: Image tag (immutable tags are recommended)
+    digest: "" # @schema type:[string] ; title: image.digest ; description: Image digest in the way sha256:aa.... Please note this parameter, if set, will override the image tag
+    pullPolicy: "IfNotPresent" # @schema required: true ; enum: ["IfNotPresent", "Always", "Never"] ; default: "IfNotPresent" ; title: image.pullPolicy ; description: Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    pullSecrets: [] # @schema type: [array] ; title: image.pullSecrets ; description: Image pull secrets. Secrets must be manually created in the namespace.
+    debug: false # @schema type: [boolean] ; default: false ; title: image.debug ; description: Enable image debug mode
+  ## Configure Container Security Context
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+  ## @param configValues.containerSecurityContext.enabled Enabled container' Security Context
+  ## @param configValues.containerSecurityContext.runAsNonRoot Set runAsNonRoot in container' Security Context
+  ## @param configValues.containerSecurityContext.runAsUser Set runAsUser in container' Security Context
+  ## @_param configValues.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
+  ## @_param configValues.containerSecurityContext.readOnlyRootFilesystem Set readOnlyRootFilesystem in container' Security Context
+  ## @_param configValues.containerSecurityContext.privileged Set privileged in container' Security Context
+  ## @_param configValues.containerSecurityContext.allowPrivilegeEscalation Set allowPrivilegeEscalation in container' Security Context
+  ## @_param configValues.containerSecurityContext.capabilities.drop List of capabilities to be dropped in container
+  ## @_param configValues.containerSecurityContext.seccompProfile.type Set seccomp profile in container
+  ##
+  containerSecurityContext: # @schema type:[object] ; required: true ; title: containerSecurityContext ; description:  Configure Container Security Context https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+    enabled: false # @schema type: [boolean] ; default: false ; title: containerSecurityContext.enabled ; description: Enable Container Security Context
+    runAsNonRoot: true # @schema type: [boolean] ; default: true ; title: containerSecurityContext.runAsNonRoot ; description: Set runAsNonRoot in container' Security Context
+    runAsUser: 1001 # @schema type: [number] ; default: 1001 ; title: containerSecurityContext.runAsUser ; description: Set runAsUser in container' Security Context
+    # seLinuxOptions: {}
+    # runAsGroup: 1001
+    # readOnlyRootFilesystem: true
+    # privileged: false
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #  drop: ["ALL"]
+    # seccompProfile:
+    #  type: "RuntimeDefault"
+  ## @param configValues.command Override default container command (useful when using custom images)
+  ## ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container
+  ## E.g:
+  ##  command:
+  ##    - sleep
+  ##
+  command: [] # @schema type:[array, null] ; title: command ; description:  command for the containers that run in the Pod (diagnosticMode definition overrides it). https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container
+  ## @param configValues.args Override default container args (useful when using custom images)
+  ## ref: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container
+  ## E.g:
+  ##  args:
+  ##    - infinity
+  ##
+  ##
+  args: [] # @schema type:[array, null] ; title: args ; description:  arguments for the containers that run in the Pod (diagnosticMode definition overrides it). https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container
+  ## @param configValues.extraEnvVars Array with extra environment variables to add to containers
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: [] # @schema type:[array, null] ; title: extraEnvVars ; description: Set additional environment variables to the containers
+  ## @param configValues.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for containers
+  ##
+  extraEnvVarsCM: '{{ template "common.names.fullname" . }}' # @schema type:[string] ; required: true ; default: "'{{ template \"common.names.fullname\" . }}'" ; title: extraEnvVarsCM ; description: ConfigMap containing extra env vars to be added to all pods (evaluated as a template)
+  ## @param configValues.extraEnvVarsSecret Name of existing Secret containing extra env vars for containers
+  ##
+  extraEnvVarsSecret: "" # @schema type:[string, null] ; title: extraEnvVarsSecret ; description: Secret containing extra env vars to be added to all pods (evaluated as a template)
+  ## @param configValues.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Example:
+  ## resources:
+  ##   requests:
+  ##     cpu: 2
+  ##     memory: 512Mi
+  ##   limits:
+  ##     cpu: 3
+  ##     memory: 1024Mi
+  ##
+  resources: {} # @schema type:[object] ; title: resources ; description: Set container requests and limits for different resources like CPU or memory (essential for production workloads) https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Resource requests and limits
+  ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## @param configValues.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if configValues.resources is set (configValues.resources is recommended for production).
+  ## More information: https://github.com/MapColonies/helm-common/blob/master/common-helpers/templates/_resources.tpl
+  ##
+  resourcesPreset: nano # @schema default: "nano" ; enum: ["none", "nano", "small", "medium", "large", "xlarge", "2xlarge"] ; title: resourcesPreset ; description: Resource requests and limits presets
+  ## @param configValues.containerPorts.http HTTP container port
+  ## @param configValues.containerPorts.https HTTPS container port
+  ##
+  containerPorts: # @schema required: true ; type:[object] ; title: containerPorts ; description: Define container ports
+    http: 8080 # @schema required: true ; type:[number] ; default: 8080 ; title: containerPorts.http ; description: Define HTTP container port
+    https: 443 # @schema required: true ; type:[number] ; default: 443 ; title: containerPorts.https ; description: Define HTTPS container port
+  ## @param configValues.customLivenessProbe Custom-livenessProbe that overrides the livenessProbe
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ##
+  customLivenessProbe: {} # @schema type:[object] ; title: customLivenessProbe ; description: Custom-livenessProbe that overrides the livenessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## Configure extra options for containers' liveness and readiness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param configValues.livenessProbe.enabled Enable livenessProbe on containers
+  ## @param configValues.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param configValues.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param configValues.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param configValues.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param configValues.livenessProbe.successThreshold Success threshold for livenessProbe
+  ##
+  livenessProbe: # @schema required: true ; type:[object] ; title: livenessProbe ; description: livenessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+    enabled: true # @schema type:[boolean] ; default: true ; title: livenessProbe.enabled ; description: Enable livenessProbe on containers
+    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: livenessProbe.initialDelaySeconds ; description: Initial delay seconds for livenessProbe
+    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: livenessProbe.periodSeconds ; description: Period seconds for livenessProbe
+    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: livenessProbe.timeoutSeconds ; description: Timeout seconds for livenessProbe
+    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: livenessProbe.failureThreshold ; description: Failure threshold for livenessProbe
+    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: livenessProbe.successThreshold ; description: Success threshold for livenessProbe
+  ## @param configValues.customReadinessProbe Custom readinessProbe that overrides the default one
+  ##
+  customReadinessProbe: {} # @schema type:[object] ; title: customReadinessProbe ; description: Custom-readinessProbe that overrides the readinessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param configValues.readinessProbe.enabled Enable readinessProbe on containers
+  ## @param configValues.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param configValues.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param configValues.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param configValues.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param configValues.readinessProbe.successThreshold Success threshold for readinessProbe
+  ##
+  readinessProbe: # @schema required: true ; type:[object] ; title: readinessProbe ; description: readinessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+    enabled: true # @schema type:[boolean] ; default: true ; title: readinessProbe.enabled ; description: Enable readinessProbe on containers
+    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: readinessProbe.initialDelaySeconds ; description: Initial delay seconds for readinessProbe
+    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: readinessProbe.periodSeconds ; description: Period seconds for readinessProbe
+    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: readinessProbe.timeoutSeconds ; description: Timeout seconds for readinessProbe
+    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: readinessProbe.failureThreshold ; description: Failure threshold for readinessProbe
+    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: readinessProbe.successThreshold ; description: Success threshold for readinessProbe
+  ## @param configValues.customStartupProbe Custom startupProbe that overrides the default one
+  ##
+  customStartupProbe: {} # @schema type:[object] ; title: customStartupProbe ; description: Custom-startupProbe that overrides the startupProbe
+  ## @param configValues.startupProbe.enabled Enable startupProbe on containers
+  ## @param configValues.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param configValues.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param configValues.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param configValues.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param configValues.startupProbe.successThreshold Success threshold for startupProbe
+  ##
+  startupProbe: # @schema required: true ; type:[object] ; title: startupProbe ; description: startupProbe
+    enabled: true # @schema type:[boolean] ; default: true ; title: startupProbe.enabled ; description: Enable startupProbe on containers
+    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: startupProbe.initialDelaySeconds ; description: Initial delay seconds for startupProbe
+    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: startupProbe.periodSeconds ; description: Period seconds for startupProbe
+    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: startupProbe.timeoutSeconds ; description: Timeout seconds for startupProbe
+    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: startupProbe.failureThreshold ; description: Failure threshold for startupProbe
+    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: startupProbe.successThreshold ; description: Success threshold for startupProbe
+  ## @param configValues.lifecycleHooks for containers to automate configuration before or after startup
+  ##
+  lifecycleHooks: {} # @schema type:[object] ; title: lifecycleHooks ; description: For containers to automate configuration before or after startup
+  ## @param configValues.extraVolumes Optionally specify extra list of additional volumes for the pods
+  ##
+  extraVolumes: [] # @schema type:[array] ; title: extraVolumes ; description: Optionally specify extra list of additional volumes for the pods
+  ## @param configValues.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the containers
+  ##
+  extraVolumeMounts: [] # @schema type:[array] ; title: extraVolumeMounts ; description: Optionally specify extra list of additional volumeMounts for the containers
+  ## @param configValues.sidecars Add additional sidecar containers to the pods
+  ## E.g:
+  ## sidecars:
+  ##   - name: your-image-name
+  ##     image: your-image
+  ##     imagePullPolicy: Always
+  ##     ports:
+  ##       - name: portname
+  ##         containerPort: 1234
+  ##
+  sidecars: [] # @schema type:[array] ; title: sidecars ; description: Add additional sidecar containers to the pods
+
+db:
+  ## @param db.name db name
+  ##
+  name: '******** YOUR_DB_NAME ********' # @schema required: true ; default: "******** YOUR_DB_NAME ********" ; type:[string] ; title: db.name ; description: db name. IMPORTANT: MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS. 
+  ## @param db.schema db schema name
+  ##
+  schema: public # @schema required: true ; default: "public" ; type:[string] ; title: db.schema ; description: db schema name. IMPORTANT: MIGHT/MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS.
+s3:
+  ## @param s3.bucket s3 bucket. IMPORTANT: MUST BE OVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS. 
+  ##
+  bucket: '******** YOUR_S3_BUCKET ********' # @schema required: true ; default: "******** YOUR_BUCKET ********" ; type:[string] ; title: s3.bucket ; description: s3 bucket. IMPORTANT: MUST BE OVVERIDEN OR INJECTED DURING DEPLOYMENT PROCESS
+
+# env:
+#   port: 8080
+#   # targetPort: 8000
+#   # protocol: TCP
+#   logLevel: info
+#   logPrettyPrintEnabled: false
+#   responseCompressionEnabled: true
+#   requestPayloadLimit: 8mb
+#   metrics:
+#     buckets:
+#       - 1
+#       - 10
+#       - 50
+#       - 100
+#       - 150
+#       - 250
+#   cswDemUrl: ''
+#   s3GatewayDemUrl: ''
+#   synchRecordsInterval: 600000
+#   protoFileUrl: ''
+#   serviceVersion: ''
+#   maximumTilesPerRequest: 250
+
+# ----------- ROUTE ----------
+## @section route parameters
+## ref: https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+route: # @schema title: route ; description: Route configuration https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+  ## @param route.enabled Is route enabled for service
+  ##
+  enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: route.enabled ; description: Is route enabled for service
+  ## @param route.annotations Additional custom annotations for route
+  ## @skip route.annotations
+  ##
+  annotations: # @schema required: true ; type: [object] ; title: route.annotations ; description: Additional custom annotations for route
+    haproxy.router.openshift.io/rewrite-target: / # @schema required: true ; default: "/" ; type: [string] ; title: route.annotations ; description: expcted to be 
+  ## @param route.hostname Route hostname(DNS)
+  ##
+  hostname: '' # @schema required: true ; default: "" ; type: [string, null] ; title: route.hostname ; description: Additional custom annotations for route
+  ## @param route.path Route path
+  ##
+  path: /api/heights/v1 # @schema required: true ; default: "/api/YOUR_SERVICE_NAME/YOUR_SERVICE_VER" ; type: [string, null] ; title: route.path ; description: Route path
+  ## @param route.targetPort Route target port 
+  ##
+  targetPort: 8080 # @schema required: true ; default: "http" ; type: [number, string] ; title: route.targetPort ; description: Route target port
+  ## Route SSL configuration
+  ## ref: https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+  ## @param route.tls.enabled Is route SSL enabled 
+  ## @param route.tls.useCerts Is route should use certificates
+  ## @param route.tls.termination Secure routes provide the ability to use several types of TLS termination to serve certificates to the client (edge | passthrough | reencrypt)
+  ## @param route.tls.insecureEdgeTerminationPolicy Edge-terminated routes can specify policy that enables traffic on insecure schemes (HTTP) to be disabled, (None or empty (for disabled) | Allow | Redirect)
+  ## 
+  tls: # @schema required: true ; title: route.tls ; description: Route SSL configuration https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+    enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: route.tls.enabled ; description: Is SSL route enabled for service
+    useCerts: true # @schema required: true ; default: true ; type: [boolean] ; title: route.tls.useCerts ; description: Does SSL route use certificates
+    termination: edge # @schema required: true ; default: "edge" ; enum: ["edge", "passthrough", "reencrypt"] ; title: route.tls.termination ; description: Secure routes provide the ability to use several types of TLS termination to serve certificates to the client
+    insecureEdgeTerminationPolicy: Redirect # @schema required: true ; default: "Redirect" ; enum: ["", "None", "Allow", "Redirect"] ; title: route.tls.insecureEdgeTerminationPolicy ; description: Edge-terminated routes can specify policy that enables traffic on insecure schemes (HTTP) to be disabled
+  ## @param route.extraRules Custom additional route configurations
+  ##
+  extraRules: {} # @schema default: {} ; type: [object] ; title: route.extraRules ; description: Custom additional route configurations according to https://docs.openshift.com/container-platform/3.11/architecture/networking/routes.html
+  ## Is timeout defined for route (defaults to 30s by openshift)
+  ## @param route.timeout.enabled Timeout enabled 
+  ## @param route.timeout.duration Timeout duration. Supported units (us, ms, s, m, h, d)
+  ##
+  timeout: # @schema required: true ; title: route.timeout ; description: Define timeout for the route
+    enabled: false # @schema default: false ; type: [boolean] ; title: route.timeout.enabled ; description: Is timeout enabled, should be different than default
+    duration: 60s # @schema required: true ; default: "30s" ; type: [string] ; title: route.timeout.duration ; description: Timeout duration. Supported units (us, ms, s, m, h, d)
+
+# ----------- INGRESS ----------
+## @section ingress parameters
+## ref: ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress: # @schema title: ingress ; description: Ingress configuration https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ## @param ingress.enabled Is ingress enabled for service
+  ##
+  enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: ingress.enabled ; description: Is ingress enabled for service
+  ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
+  ##
+  apiVersion: "" # @schema type: [string] ; title: ingress.enabled ; description: Force Ingress API version (automatically detected if not set)
+  ## @param ingress.type Ingress type supported by OS/K8S. Values: 'nginx-org' | 'nginx-kubernetes'
+  ## 
+  type: nginx-org # @schema required: true ; default: "nginx-org" ; enum: ["nginx-org", "nginx-kubernetes"] ; title: ingress.type ; description: Ingress type supported by OS/K8S.
+  ## @param ingress.annotations Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  ## Use this parameter to set the required annotations for cert-manager, see
+  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ## e.g:
+  ## annotations:
+  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+  ##
+  annotations: {} # @schema type: [object] ; title: ingress.annotations ; description: Additional annotations for the Ingress resource https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ## @param ingress.pathType Ingress path type
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ##
+  pathType: Prefix # @schema required: true ; default: "Prefix" ; enum: ["ImplementationSpecific", "Exact", "Prefix"] ; title: ingress.pathType ; description: Ingress path type https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ## @param ingress.hostname Route hostname(DNS)
+  ##
+  hostname: YOUR_COMPONENT_NAME.local # @schema default: "YOUR_COMPONENT_NAME.local" ; type: [string] ; title: ingress.hostname ; description: Ingress host (if not defined, main rule will not be generated, only ingress.extraHosts ) 
+  ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  ##
+  ingressClassName: "" # @schema type: [string] ; title: ingress.ingressClassName ; description: IngressClass that will be be used to implement the Ingress https://kubernetes.io/docs/concepts/services-networking/ingress/
+  ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
+  ## e.g:
+  ## extraHosts:
+  ##   - name: YOUR_COMPONENT_NAME.local
+  ##     path: /
+  ##     pathType: Exact # (default ImplementationSpecific)  
+  ##
+  extraHosts: [] # @schema type: [array] ; title: ingress.extraHosts ; description: Array with additional hostname(s) to be covered with the ingress record
+  ## @param ingress.extraPaths An array with additional arbitrary paths that may need to be added to the ingress under the main host
+  ## e.g:
+  ## extraPaths:
+  ## - path: /*
+  ##   backend:
+  ##     serviceName: ssl-redirect
+  ##     servicePort: use-annotation
+  ##
+  extraPaths: [] # @schema type: [array] ; title: ingress.extraPaths ; description: An array with additional arbitrary paths for main ingress rule that may need to be added to the ingress under the main host
+  ## @param ingress.path Default path for the ingress record
+  ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
+  ##
+  path: /YOUR_PATH # @schema required: true ; default: "/YOUR_PATH"; type: [string] ; title: ingress.path ; description: Default path for the ingress record
+  ## @param ingress.extraRules Additional rules to be covered with this ingress record
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+  ## e.g:
+  ## extraRules:
+  ## - host: example.local
+  ##     http:
+  ##       path: /
+  ##       backend:
+  ##         service:
+  ##           name: example-svc
+  ##           port:
+  ##             name: http
+  ##
+  extraRules: [] # @schema type: [array] ; title: ingress.extraRules ; description: Additional rules to be covered with this ingress record https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+  ## @param ingress.extraTls TLS configuration for additional hostname(s) to be covered with this ingress record
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  ## e.g:
+  ## extraTls:
+  ## - hosts:
+  ##     - %%COMPONENT_NAME%%.local
+  ##   secretName: %%COMPONENT_NAME%%.local-tls
+  ##
+  extraTls: [] # @schema type: [array] ; title: ingress.extraTls ; description: TLS configuration for additional hostname(s) to be covered with this ingress record https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  ## @param ingress.selfSigned Create a TLS secret for this ingress record using self-signed certificates generated by Helm
+  ##
+  selfSigned: false # @schema type: [boolean] ; default: false ;  title: ingress.selfSigned ; description: Create a TLS secret(expired in 365 days) for this ingress record using self-signed certificates generated by Helm
+  ## @param ingress.tls Enable TLS configuration for the host defined at `ingress.hostname` parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
+  ## You can:
+  ##   - Use the `ingress.secrets` parameter to create this TLS secret
+  ##   - Rely on cert-manager to create it by setting the corresponding annotations
+  ##   - Rely on Helm to create self-signed certificates by setting `ingress.selfSigned=true`
+  ##
+  tls: true # @schema required: true ; default: true ; type: [boolean] ; title: ingress.tls ; description: Enable TLS configuration for the host defined at `ingress.hostname` parameter
+  ## ingress CORS 
+  ## @param ingress.cors.enabled Is CORS enabled
+  ## @param ingress.cors.origin Is CORS allowed origin
+  ##
+  cors: # @schema required: true ; type: [object] ; title: ingress.cors ; description: CORS support on ingress nginx annotation principles
+    enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: cors.enabled ; description: In enabled CORS support on ingress nginx annotation principles
+    origin: '*' # @schema required: true ; default: "'*'" ; type: [string] ; title: cors.origin ; description: CORS origin
+    
+# ----------- SERVICE ----------
+## @section service parameters
+## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+service: # @schema title: service ; description: Service configuration 
+  ## @param service.type service type (NodePort | ClusterIP | LoadBalancer | ExternalName)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  ##
+  type: NodePort # @schema required: true ; default: "NodePort" ; enum: ["NodePort", "ClusterIP", "LoadBalancer", "ExternalName"] ; title: service.type ; description: Service type 
+  ## @param service.protocol Protocol for service (TCP | SCTP | UDP)
+  ## ref: https://kubernetes.io/docs/reference/networking/service-protocols/
+  ##
+  protocol: TCP # @schema required: true ; default: "TCP" ; enum: ["TCP", "SCTP", "UDP"] ; title: service.protocol ; description: Protocol for service https://kubernetes.io/docs/reference/networking/service-protocols/
+  ## @param service.annotations Additional custom annotations for service
+  ##
+  annotations: {} # @schema type: [object] ; title: service.annotations ; description: Additional custom annotations for service
+  ## @param service.clusterIP service Cluster IP
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+  ## e.g.:
+  ## clusterIP: None
+  ##
+  clusterIP: "" # @schema type: [string] ; title: service.clusterIP ; description: service Cluster IP. The string value None is a special case and is not the same as leaving the service.clusterIP field unset. https://kubernetes.io/docs/concepts/services-networking/service/#headless-services
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
+  ## Values: ClientIP or None
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/ ; https://jamesdefabia.github.io/docs/user-guide/services/
+  ##
+  sessionAffinity: "" # @schema enum: ["ClientIP", "None", ""] ; title: service.sessionAffinity ; description: Control where client requests go, to the same pod or round-robin https://jamesdefabia.github.io/docs/user-guide/services/
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#sessionaffinityconfig-v1-core
+  ## e.g.:
+  ## sessionAffinityConfig:
+  ##   clientIP:
+  ##     timeoutSeconds: 300
+  ##
+  sessionAffinityConfig: {} # @schema type: [object] ; title: service.sessionAffinityConfig ; description: Additional settings for the sessionAffinity. https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#sessionaffinityconfig-v1-core
+  ## @param service.externalTrafficPolicy service external traffic policy. Probably default should be "Cluster"
+  ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ##
+  externalTrafficPolicy: "" # @schema enum: ["Cluster", "Local", ""] ; title: service.sessionAffinity ; description: service external traffic policy http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ## @param service.loadBalancerSourceRanges service Load Balancer sources
+  ## ref: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+  ## e.g:
+  ## loadBalancerSourceRanges:
+  ##   - 10.10.10.0/24
+  ##
+  loadBalancerSourceRanges: [] # @schema type: [array] ; title: service.loadBalancerSourceRanges ; description: service Load Balancer sources (e.g. - 10.10.10.0/24) https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+  ## @param service.loadBalancerIP service Load Balancer IP
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
+  ##
+  loadBalancerIP: "" # @schema type: [string] ; title: service.loadBalancerIP ; description: service Load Balancer IP https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
+  ## @param service.ports.http service HTTP port
+  ## @param service.ports.https service HTTPS port
+  ##
+  ports: # @schema required: true ; type: [object] ; title: service.ports ; description: service ports
+    http: 80 # @schema required: true ; default: 80 ; type: [number, string] ; title: service.ports.http ; description: service hhtp port
+    https: "" # @schema type: [number, string] ; title: service.ports.https ; description: service https port
+  ## Node ports to expose
+  ## @param service.nodePorts.http Node port for HTTP
+  ## @param service.nodePorts.https Node port for HTTPS
+  ## NOTE: choose port between <30000-32767>
+  ##
+  nodePorts: # @schema type: [object] ; title: service.nodePorts ; description: Node ports to expose
+    http: "" # @schema type: [number, string] ; title: service.nodePorts.http ; description: Node port for HTTP
+    https: "" # @schema type: [number, string] ; title: service.nodePorts.https ; description: Node port for HTTPS
+  ## @param service.extraPorts Extra ports to expose in service (normally used with the `sidecars` value)
+  ##
+  extraPorts: [] # @schema type: [array] ; title: service.extraPorts ; description: Extra ports to expose in service (normally used with the `sidecars` value) 
+
+# ----------- SERVICEACCOUNT ----------
+## @section serviceAccount parameters
+serviceAccount: # @schema required: true ; type: [object] ; title: serviceAccount ; description: ServiceAccount configuration
+  ## @param serviceAccount.create Specifies whether a ServiceAccount should be created
+  ##
+  create: true # @schema required: true ; type: [boolean] ; title: serviceAccount.create ; description: Specifies whether a ServiceAccount should be created
+  ## @param serviceAccount.name The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the common.names.fullname template
+  ##
+  name: "" # @schema type: [string, null] ; title: serviceAccount.name ; description: The name of the ServiceAccount to use.
+  ## @param serviceAccount.annotations Additional Service Account annotations (evaluated as a template)
+  ##
+  annotations: {} # @schema type: [object, null] ; title: serviceAccount.annotations ; description: Additional Service Account annotations
+
+# ----------- RBAC ----------
+## @section rbac parameters
+rbac: # @schema title: rbac ; description: Relevant for Role and RoleBinding deployment resources
+  ## @param rbac.create Specifies whether RBAC resources should be created
+  ##
+  create: false # @schema type: [boolean] ; title: rbac.create ; description: Specifies whether RBAC resources should be created for Role and RoleBinding
+  ## @param rbac.rules RBAC rules to set
+  ## ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac
+  ## e.g:
+  ## rules:
+  ##   - apiGroups:
+  ##       - ""
+  ##     resources:
+  ##       - pods
+  ##     verbs:
+  ##       - get
+  ##       - list
+  ##
+  rules: [] # @schema type: [array] ; title: rbac.rules ; description: RBAC rules to set for Role resource https://kubernetes.io/docs/reference/access-authn-authz/rbac
+
+# ----------- PODSECURITYPOLICY ----------
+## @section podSecurityPolicy parameters
+## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 ##
-exampleValue: common-chart
+podSecurityPolicy: # @schema title: podSecurityPolicy ; description: Relevant for Role deployment resource
+  ## @param podSecurityPolicy.enabled Enable PodSecurityPolicy's RBAC rules. WARNING: PodSecurityPolicy is deprecated in Kubernetes v1.21 or later, unavailable in v1.25 or later https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+  ##
+  enabled: false # @schema type: [boolean] ; title: podSecurityPolicy.enabled ; description: Specifies whether podSecurityPolicy should be enabled for Role
