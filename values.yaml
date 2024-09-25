@@ -3,11 +3,20 @@
 ## @descriptionStart
 ## These params are shared between different sections.
 ## @descriptionEnd
+## @param nameOverride [string] Override Chart name if needed
+##
+nameOverride: # @schema type: [string, null] ; title: nameOverride ; description: Override Chart name if needed
+## @param fullnameOverride [string] Override fullname
+##
+fullnameOverride: # @schema type: [string, null] ; title: fullnameOverride ; description: Override fullname
 ## @param kubeVersion [string] Kubernetes version
+##
 kubeVersion: # @schema type: [string, null] ; title: kubeVersion ; description: >= 1.13.0 < 1.15.0 
 ## @param commonLabels [object] Labels to add for all k8s resources
+##
 commonLabels:  # @schema required: true ; type: [object, null] ; title: commonLabels ; description: Labels to add for all k8s resources
 ## @param commonAnnotations [object] Annotations to add for all k8s resources
+##
 commonAnnotations: # @schema required: true ; type: [object, null] ; title: commonAnnotations ; description: Annotations to add for all k8s resources
 # ----------- initContainers ----------
 ## volumePermissions 
@@ -77,6 +86,9 @@ configValues: # @schema required: true ; title: configValues ; description: Depl
   ## @param configValues.replicaCount Number of replicas to deploy
   ##
   replicaCount: 1 # @schema required: true ; default: 1 ; type: [number] ; title: replicaCount ; description: Number of replicas to deploy. Wiil be used if !hpa.enabled
+  ## @param configValues.revisionHistoryLimit Number of revision to preserve, default value is 5
+  ##
+  revisionHistoryLimit: # @schema default: 5 ; type: [number] ; title: revisionHistoryLimit ; description: Number of revision to preserve
   ## @param configValues.updateStrategy Update strategy of deploy. For more details see values.yaml
   ##
   updateStrategy: {} # @schema type: [object] ; title: updateStrategy ; description: Update strategy of deploy https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy

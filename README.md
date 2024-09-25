@@ -1,5 +1,29 @@
-# Helm Common (STILL IN WORKING PROGRESS)
+# Helm Common 
 
+This repo holds a MapColonies ChartLibrary which encapsulates HELM templates of k8s/openshift deployment resources (eg. deployment, service, configmap, route, ingress and etc.). <br/>
+The inspiration comes from BITNAMI [template/CHART_NAME/templates](https://github.com/bitnami/charts/tree/main/template/CHART_NAME/templates)
+
+For example, implementation of k8s resource with named templates from this ChartLibrary should looks like:
+``` yaml
+    # deployment.yaml
+
+    {{- $MAIN_OBJECT_BLOCK := "configValues" -}}
+    {{- $COMPONENT_NAME := "backend" -}}
+    {{ include "mc-chart.deployment" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
+```
+``` yaml
+    # service.yaml
+
+    {{- $MAIN_OBJECT_BLOCK := "configValues" -}}
+    {{- $COMPONENT_NAME := "backend" -}}
+    {{ include "mc-chart.service" (dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
+```
+> [!IMPORTANT] 
+> This ChartLibrary is based on **values driven** approach (k8s respective resource will be generated according to supplied values).<br/>
+> This repo also contains MapColonies JSON schemas for **global.yaml** and **values.yaml**.
+> Those schemas will be in use by [ts-server-boilerplate](https://github.com/MapColonies/ts-server-boilerplate/) and all service repos that start from this boilerplate.
+
+## Maintanance
 In order to re-generate README.md (params based on values.yaml commented by [# @param])<br/>
 Used: https://github.com/bitnami/readme-generator-for-helm
 ```
@@ -78,6 +102,8 @@ These params are shared between different sections.
 
 | Name                        | Description                                                              | Value   |
 | --------------------------- | ------------------------------------------------------------------------ | ------- |
+| `nameOverride`              | Override Chart name if needed                                            | `""`    |
+| `fullnameOverride`          | Override fullname                                                        | `""`    |
 | `kubeVersion`               | Kubernetes version                                                       | `""`    |
 | `commonLabels`              | Labels to add for all k8s resources                                      | `{}`    |
 | `commonAnnotations`         | Annotations to add for all k8s resources                                 | `{}`    |
@@ -105,6 +131,7 @@ This description starts in a new line instead of the same line of description st
 | `configValues.autoscaling.hpa.targetCPU`                      | Target CPU utilization percentage                                                                                                                                                                                                    | `60`                                       |
 | `configValues.autoscaling.hpa.targetMemory`                   | Target Memory utilization percentage                                                                                                                                                                                                 | `nil`                                      |
 | `configValues.replicaCount`                                   | Number of replicas to deploy                                                                                                                                                                                                         | `1`                                        |
+| `configValues.revisionHistoryLimit`                           | Number of revision to preserve, default value is 5                                                                                                                                                                                   | `nil`                                      |
 | `configValues.updateStrategy`                                 | Update strategy of deploy. For more details see values.yaml                                                                                                                                                                          | `{}`                                       |
 | `configValues.podLabels`                                      | Extra labels for pods                                                                                                                                                                                                                | `{}`                                       |
 | `configValues.podAnnotations.enabled`                         | Enable pod annotations                                                                                                                                                                                                               | `true`                                     |

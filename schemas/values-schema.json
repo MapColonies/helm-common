@@ -720,6 +720,14 @@
                     "title": "resourcesPreset",
                     "type": "string"
                 },
+                "revisionHistoryLimit": {
+                    "default": 5,
+                    "description": "Number of revision to preserve",
+                    "title": "revisionHistoryLimit",
+                    "type": [
+                        "number"
+                    ]
+                },
                 "schedulerName": {
                     "description": "https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/",
                     "title": "schedulerName",
@@ -943,6 +951,14 @@
                 "object"
             ]
         },
+        "fullnameOverride": {
+            "description": "Override fullname",
+            "title": "fullnameOverride",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
         "ingress": {
             "description": "Ingress configuration https://kubernetes.io/docs/concepts/services-networking/ingress/",
             "properties": {
@@ -1101,6 +1117,14 @@
         "kubeVersion": {
             "description": "\u003e= 1.13.0 \u003c 1.15.0",
             "title": "kubeVersion",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "nameOverride": {
+            "description": "Override Chart name if needed",
+            "title": "nameOverride",
             "type": [
                 "string",
                 "null"
