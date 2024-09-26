@@ -91,7 +91,7 @@ spec:
       {{- if $MAIN_OBJECT_BLOCK.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" $MAIN_OBJECT_BLOCK.topologySpreadConstraints "context" $context) | nindent 8 }}
       {{- end }}
-      {{- if and $MAIN_OBJECT_BLOCK.podSecurityContext $MAIN_OBJECT_BLOCK.podSecurityContext.enabled }}
+      {{- if $MAIN_OBJECT_BLOCK.podSecurityContext.enabled }}
       securityContext: {{- omit $MAIN_OBJECT_BLOCK.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
       {{- if $MAIN_OBJECT_BLOCK.terminationGracePeriodSeconds }}

@@ -367,11 +367,11 @@ configValues: # @schema required: true ; title: configValues ; description: Depl
   ##
   livenessProbe: # @schema required: true ; type:[object] ; title: livenessProbe ; description: livenessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
     enabled: true # @schema type:[boolean] ; default: true ; title: livenessProbe.enabled ; description: Enable livenessProbe on containers
-    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: livenessProbe.initialDelaySeconds ; description: Initial delay seconds for livenessProbe
-    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: livenessProbe.periodSeconds ; description: Period seconds for livenessProbe
-    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: livenessProbe.timeoutSeconds ; description: Timeout seconds for livenessProbe
-    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: livenessProbe.failureThreshold ; description: Failure threshold for livenessProbe
-    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: livenessProbe.successThreshold ; description: Success threshold for livenessProbe
+    initialDelaySeconds: 60 # @schema type:[number] ; default: 60 ; title: livenessProbe.initialDelaySeconds ; description: Initial delay seconds for livenessProbe
+    periodSeconds: 10 # @schema type:[number] ; default: 10 ; title: livenessProbe.periodSeconds ; description: Period seconds for livenessProbe
+    timeoutSeconds: 1 # @schema type:[number] ; default: 1 ; title: livenessProbe.timeoutSeconds ; description: Timeout seconds for livenessProbe
+    failureThreshold: 3 # @schema type:[number] ; default: 3 ; title: livenessProbe.failureThreshold ; description: Failure threshold for livenessProbe
+    successThreshold: 1 # @schema type:[number] ; default: 1 ; title: livenessProbe.successThreshold ; description: Success threshold for livenessProbe
   ## @param configValues.customReadinessProbe Custom readinessProbe that overrides the default one
   ##
   customReadinessProbe: {} # @schema type:[object] ; title: customReadinessProbe ; description: Custom-readinessProbe that overrides the readinessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -384,14 +384,14 @@ configValues: # @schema required: true ; title: configValues ; description: Depl
   ##
   readinessProbe: # @schema required: true ; type:[object] ; title: readinessProbe ; description: readinessProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
     enabled: true # @schema type:[boolean] ; default: true ; title: readinessProbe.enabled ; description: Enable readinessProbe on containers
-    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: readinessProbe.initialDelaySeconds ; description: Initial delay seconds for readinessProbe
-    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: readinessProbe.periodSeconds ; description: Period seconds for readinessProbe
-    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: readinessProbe.timeoutSeconds ; description: Timeout seconds for readinessProbe
-    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: readinessProbe.failureThreshold ; description: Failure threshold for readinessProbe
-    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: readinessProbe.successThreshold ; description: Success threshold for readinessProbe
+    initialDelaySeconds: 60 # @schema type:[number] ; default: 60 ; title: readinessProbe.initialDelaySeconds ; description: Initial delay seconds for readinessProbe
+    periodSeconds: 10 # @schema type:[number] ; default: 10 ; title: readinessProbe.periodSeconds ; description: Period seconds for readinessProbe
+    timeoutSeconds: 1 # @schema type:[number] ; default: 1 ; title: readinessProbe.timeoutSeconds ; description: Timeout seconds for readinessProbe
+    failureThreshold: 3 # @schema type:[number] ; default: 3 ; title: readinessProbe.failureThreshold ; description: Failure threshold for readinessProbe
+    successThreshold: 1 # @schema type:[number] ; default: 1 ; title: readinessProbe.successThreshold ; description: Success threshold for readinessProbe
   ## @param configValues.customStartupProbe Custom startupProbe that overrides the default one
   ##
-  customStartupProbe: {} # @schema type:[object] ; title: customStartupProbe ; description: Custom-startupProbe that overrides the startupProbe
+  customStartupProbe: {} # @schema type:[object] ; title: customStartupProbe ; description: Custom-startupProbe that overrides the startupProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
   ## @param configValues.startupProbe.enabled Enable startupProbe on containers
   ## @param configValues.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
   ## @param configValues.startupProbe.periodSeconds Period seconds for startupProbe
@@ -399,13 +399,13 @@ configValues: # @schema required: true ; title: configValues ; description: Depl
   ## @param configValues.startupProbe.failureThreshold Failure threshold for startupProbe
   ## @param configValues.startupProbe.successThreshold Success threshold for startupProbe
   ##
-  startupProbe: # @schema required: true ; type:[object] ; title: startupProbe ; description: startupProbe
-    enabled: true # @schema type:[boolean] ; default: true ; title: startupProbe.enabled ; description: Enable startupProbe on containers
-    initialDelaySeconds: 60 # @schema required: true ; type:[number] ; default: 60 ; title: startupProbe.initialDelaySeconds ; description: Initial delay seconds for startupProbe
-    periodSeconds: 10 # @schema required: true ; type:[number] ; default: 10 ; title: startupProbe.periodSeconds ; description: Period seconds for startupProbe
-    timeoutSeconds: 1 # @schema required: true ; type:[number] ; default: 1 ; title: startupProbe.timeoutSeconds ; description: Timeout seconds for startupProbe
-    failureThreshold: 3 # @schema required: true ; type:[number] ; default: 3 ; title: startupProbe.failureThreshold ; description: Failure threshold for startupProbe
-    successThreshold: 1 # @schema required: true ; type:[number] ; default: 1 ; title: startupProbe.successThreshold ; description: Success threshold for startupProbe
+  startupProbe: # @schema required: true ; type:[object] ; title: startupProbe ; description: startupProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+    enabled: true # @schema type:[boolean] ; default: false ; title: startupProbe.enabled ; description: Enable startupProbe on containers
+    initialDelaySeconds: 60 # @schema type:[number] ; default: 60 ; title: startupProbe.initialDelaySeconds ; description: Initial delay seconds for startupProbe
+    periodSeconds: 10 # @schema type:[number] ; default: 10 ; title: startupProbe.periodSeconds ; description: Period seconds for startupProbe
+    timeoutSeconds: 1 # @schema type:[number] ; default: 1 ; title: startupProbe.timeoutSeconds ; description: Timeout seconds for startupProbe
+    failureThreshold: 3 # @schema type:[number] ; default: 3 ; title: startupProbe.failureThreshold ; description: Failure threshold for startupProbe
+    successThreshold: 1 # @schema type:[number] ; default: 1 ; title: startupProbe.successThreshold ; description: Success threshold for startupProbe
   ## @param configValues.lifecycleHooks for containers to automate configuration before or after startup
   ##
   lifecycleHooks: {} # @schema type:[object] ; title: lifecycleHooks ; description: For containers to automate configuration before or after startup
@@ -515,7 +515,7 @@ ingress: # @schema title: ingress ; description: Ingress configuration https://k
   enabled: true # @schema required: true ; default: true ; type: [boolean] ; title: ingress.enabled ; description: Is ingress enabled for service
   ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
   ##
-  apiVersion: "" # @schema type: [string] ; title: ingress.enabled ; description: Force Ingress API version (automatically detected if not set)
+  apiVersion: "" # @schema type: [string] ; title: ingress.apiVersion ; description: Force Ingress API version (automatically detected if not set)
   ## @param ingress.type Ingress type supported by OS/K8S. Values: 'nginx-org' | 'nginx-kubernetes'
   ## 
   type: nginx-org # @schema required: true ; default: "nginx-org" ; enum: ["nginx-org", "nginx-kubernetes"] ; title: ingress.type ; description: Ingress type supported by OS/K8S.
@@ -609,7 +609,7 @@ service: # @schema title: service ; description: Service configuration
   ## @param service.type service type (NodePort | ClusterIP | LoadBalancer | ExternalName)
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   ##
-  type: NodePort # @schema required: true ; default: "NodePort" ; enum: ["NodePort", "ClusterIP", "LoadBalancer", "ExternalName"] ; title: service.type ; description: Service type 
+  type: ClusterIP # @schema default: "ClusterIP" ; enum: ["NodePort", "ClusterIP", "LoadBalancer", "ExternalName"] ; title: service.type ; description: Service type 
   ## @param service.protocol Protocol for service (TCP | SCTP | UDP)
   ## ref: https://kubernetes.io/docs/reference/networking/service-protocols/
   ##
