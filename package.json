@@ -8,7 +8,7 @@
     "concat-values": "concat -o ./global_and_values.yaml ./global.yaml ./values.yaml",
     "gen-readme": "npm run concat-values && readme-generator -r ./README.md -v ./global_and_values.yaml",
     "gen-schemas": "helm schema -input ./values.yaml -output ./schemas/values-schema.json && helm schema -input ./global.yaml -output ./schemas/global-schema.json",
-    "helm-publish": "helm dependency update && helm package . && helm push helm-common-1.0.1.tgz oci://acrarolibotnonprod.azurecr.io/helm/common"
+    "helm-publish": "helm dependency update && helm package . && helm push helm-common-1.0.1.tgz oci://acrarolibotnonprod.azurecr.io/helm/library"
   },
   "repository": {
     "type": "git",
