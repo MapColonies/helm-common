@@ -251,7 +251,7 @@
                     ]
                 },
                 "customStartupProbe": {
-                    "description": "Custom-startupProbe that overrides the startupProbe",
+                    "description": "Custom-startupProbe that overrides the startupProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
                     "properties": {},
                     "title": "customStartupProbe",
                     "type": [
@@ -443,13 +443,6 @@
                             ]
                         }
                     },
-                    "required": [
-                        "initialDelaySeconds",
-                        "periodSeconds",
-                        "timeoutSeconds",
-                        "failureThreshold",
-                        "successThreshold"
-                    ],
                     "title": "livenessProbe",
                     "type": [
                         "object"
@@ -677,13 +670,6 @@
                             ]
                         }
                     },
-                    "required": [
-                        "initialDelaySeconds",
-                        "periodSeconds",
-                        "timeoutSeconds",
-                        "failureThreshold",
-                        "successThreshold"
-                    ],
                     "title": "readinessProbe",
                     "type": [
                         "object"
@@ -743,10 +729,10 @@
                     ]
                 },
                 "startupProbe": {
-                    "description": "startupProbe",
+                    "description": "startupProbe https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
                     "properties": {
                         "enabled": {
-                            "default": true,
+                            "default": false,
                             "description": "Enable startupProbe on containers",
                             "title": "startupProbe.enabled",
                             "type": [
@@ -794,13 +780,6 @@
                             ]
                         }
                     },
-                    "required": [
-                        "initialDelaySeconds",
-                        "periodSeconds",
-                        "timeoutSeconds",
-                        "failureThreshold",
-                        "successThreshold"
-                    ],
                     "title": "startupProbe",
                     "type": [
                         "object"
@@ -972,7 +951,7 @@
                 },
                 "apiVersion": {
                     "description": "Force Ingress API version (automatically detected if not set)",
-                    "title": "ingress.enabled",
+                    "title": "ingress.apiVersion",
                     "type": [
                         "string"
                     ]
@@ -1490,7 +1469,7 @@
                     ]
                 },
                 "type": {
-                    "default": "NodePort",
+                    "default": "ClusterIP",
                     "description": "Service type",
                     "enum": [
                         "NodePort",
@@ -1503,7 +1482,6 @@
                 }
             },
             "required": [
-                "type",
                 "protocol",
                 "ports"
             ],

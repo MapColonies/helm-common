@@ -248,22 +248,22 @@ This description starts in a new line instead of the same line of description st
 
 ### service parameters
 
-| Name                               | Description                                                                | Value      |
-| ---------------------------------- | -------------------------------------------------------------------------- | ---------- |
-| `service.type`                     | service type (NodePort | ClusterIP | LoadBalancer | ExternalName)          | `NodePort` |
-| `service.protocol`                 | Protocol for service (TCP | SCTP | UDP)                                    | `TCP`      |
-| `service.annotations`              | Additional custom annotations for service                                  | `{}`       |
-| `service.clusterIP`                | service Cluster IP                                                         | `""`       |
-| `service.sessionAffinity`          | Control where client requests go, to the same pod or round-robin           | `""`       |
-| `service.sessionAffinityConfig`    | Additional settings for the sessionAffinity                                | `{}`       |
-| `service.externalTrafficPolicy`    | service external traffic policy. Probably default should be "Cluster"      | `""`       |
-| `service.loadBalancerSourceRanges` | service Load Balancer sources                                              | `[]`       |
-| `service.loadBalancerIP`           | service Load Balancer IP                                                   | `""`       |
-| `service.ports.http`               | service HTTP port                                                          | `80`       |
-| `service.ports.https`              | service HTTPS port                                                         | `""`       |
-| `service.nodePorts.http`           | Node port for HTTP                                                         | `""`       |
-| `service.nodePorts.https`          | Node port for HTTPS                                                        | `""`       |
-| `service.extraPorts`               | Extra ports to expose in service (normally used with the `sidecars` value) | `[]`       |
+| Name                               | Description                                                                | Value       |
+| ---------------------------------- | -------------------------------------------------------------------------- | ----------- |
+| `service.type`                     | service type (NodePort | ClusterIP | LoadBalancer | ExternalName)          | `ClusterIP` |
+| `service.protocol`                 | Protocol for service (TCP | SCTP | UDP)                                    | `TCP`       |
+| `service.annotations`              | Additional custom annotations for service                                  | `{}`        |
+| `service.clusterIP`                | service Cluster IP                                                         | `""`        |
+| `service.sessionAffinity`          | Control where client requests go, to the same pod or round-robin           | `""`        |
+| `service.sessionAffinityConfig`    | Additional settings for the sessionAffinity                                | `{}`        |
+| `service.externalTrafficPolicy`    | service external traffic policy. Probably default should be "Cluster"      | `""`        |
+| `service.loadBalancerSourceRanges` | service Load Balancer sources                                              | `[]`        |
+| `service.loadBalancerIP`           | service Load Balancer IP                                                   | `""`        |
+| `service.ports.http`               | service HTTP port                                                          | `80`        |
+| `service.ports.https`              | service HTTPS port                                                         | `""`        |
+| `service.nodePorts.http`           | Node port for HTTP                                                         | `""`        |
+| `service.nodePorts.https`          | Node port for HTTPS                                                        | `""`        |
+| `service.extraPorts`               | Extra ports to expose in service (normally used with the `sidecars` value) | `[]`        |
 
 ### serviceAccount parameters
 
