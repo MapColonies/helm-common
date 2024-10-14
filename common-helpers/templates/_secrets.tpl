@@ -218,7 +218,7 @@ Params:
 */}}
 {{- define "common.secrets.tlsSecretName" -}}
 {{- $hostname := .hostname -}}
-{{- if not $hostname -}}
+{{- if and (not $hostname) (not (quote .context.Values.ingress | empty)) -}}
 {{- $hostname := .context.Values.ingress.hostname -}}
 {{- end -}}
 {{- printf "%s-tls" $hostname -}}

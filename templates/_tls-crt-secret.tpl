@@ -10,7 +10,7 @@ USAGE:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ ternary $CERTIFICATE.name (include "common.secrets.tlsSecretName" (dict "context" $context "hostname" $CERTIFICATE.hostname)) $CERTIFICATE.name }}
+  name: {{ ternary $CERTIFICATE.name (include "common.secrets.tlsSecretName" (dict "context" $context "hostname" $CERTIFICATE.hostname)) (not (quote $CERTIFICATE.name | empty)) }}
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
