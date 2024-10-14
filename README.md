@@ -26,13 +26,13 @@ For example, implementation of k8s resource with named templates from this Chart
 ## Maintanance
 In order to re-generate README.md (params based on values.yaml commented by [# @param])<br/>
 Used: https://github.com/bitnami/readme-generator-for-helm
-```
+```bash
     npm run gen-readme
 ```
 
 In order to re-generate schemas (based on global.yaml and values.yaml commented by [# @schema]) <br/>
 Used: https://github.com/losisin/helm-values-schema-json
-```
+```bash
     npm run gen-schemas
 ```
 
@@ -74,6 +74,7 @@ These params are prerequisites and managed by INFRA team per specific network/na
 | `global.db.secretName`                        | db server port                                                                                                    | `postgres-secret`                                                 |
 | `global.db.ssl.enabled`                       | is db ssl enabled                                                                                                 | `false`                                                           |
 | `global.db.ssl.rejectUnauthorized`            | db user rejectUnauthorized                                                                                        | `true`                                                            |
+| `global.tlsCertificates[0].name`              | name of certificate                                                                                               | `wildcard.mapcolonies.net`                                        |
 | `global.tlsCertificates[0].hostname`          | hostname(dns) of certificate                                                                                      | `YOUR_SUB-DOMAIN_1.mapcolonies.net`                               |
 | `global.tlsCertificates[0].certificate`       | certificate value or aliased value                                                                                | `DUMMY_certificate_VALUE_OR_ALIAS`                                |
 | `global.tlsCertificates[0].key`               | key value or aliased value                                                                                        | `DUMMY_key_VALUE_OR_ALIAS`                                        |

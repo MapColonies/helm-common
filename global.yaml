@@ -110,20 +110,23 @@ global: # @schema required: false ; title: .Values.global ; description: These p
       ##
       rejectUnauthorized: true # @schema required: true ; default: true; type:[boolean] ; title: db.rejectUnauthorized ; description: db user rejectUnauthorized
   ##
-  tlsCertificates: # @schema type:[array, null] ; title: tlsCertificates ; description: Secrets for TLS certificates per hostname to be "used in deployment"/"created"
+  tlsCertificates: # @schema type:[array, null] ; title: tlsCertificates ; description: TLS certificates to be "used in deployment"/"created" (one of the following values must be defined: 'name', 'hostname')
     - 
+      ## @param global.tlsCertificates[0].name name of certificate
+      ##
+      name: wildcard.mapcolonies.net # @schema default: "wildcard.mapcolonies.net" ; type: [string]; title: tlsCertificates.name ; description: name of certificate
       ## @param global.tlsCertificates[0].hostname hostname(dns) of certificate
       ##
-      hostname: YOUR_SUB-DOMAIN_1.mapcolonies.net # @schema required: true; default: "YOUR_SUB-DOMAIN_1.mapcolonies.net" ; type: [string]; title: tlsCertificates.hostname ; description: hostname(dns) of certificate
+      hostname: YOUR_SUB-DOMAIN_1.mapcolonies.net # @schema default: "YOUR_SUB-DOMAIN_1.mapcolonies.net" ; type: [string]; title: tlsCertificates.hostname ; description: hostname(dns) of certificate
       ## @param global.tlsCertificates[0].certificate certificate value or aliased value
       ##
-      certificate: DUMMY_certificate_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_certificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.hostname ; description: hostname(dns) of certificate
+      certificate: DUMMY_certificate_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_certificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.certificate ; description: certificate value or aliased value
       ## @param global.tlsCertificates[0].key key value or aliased value
       ##
       key: DUMMY_key_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_key_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.key ; description: key value or aliased value
       ## @param global.tlsCertificates[0].caCertificate caCertificate value or aliased value
       ##
-      caCertificate: DUMMY_caCertificate_VALUE_OR_ALIAS # @schema required: true; default: "DUMMY_caCertificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.caCertificate ; description: caCertificate value or aliased value
+      caCertificate: DUMMY_caCertificate_VALUE_OR_ALIAS # @schema default: "DUMMY_caCertificate_VALUE_OR_ALIAS" ; type: [string]; title: tlsCertificates.caCertificate ; description: caCertificate value or aliased value
   ##
   secrets: # @schema type:[array, null] ; title: secrets ; description: List of Infra Secrets that are common for all domains/teams 
     - 
