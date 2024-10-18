@@ -51,9 +51,9 @@ spec:
     {{- if $context.Values.ingress.extraRules }}
     {{- include "common.tplvalues.render" (dict "value" $context.Values.ingress.extraRules "context" $context) | nindent 4 }}
     {{- end }}
-  {{- if or (and $context.Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $context.Values.ingress.annotations )) $context.Values.ingress.selfSigned)) $context.Values.ingress.extraTls }}
+  {{- if or (and $context.Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $context.Values.ingress )) $context.Values.ingress.selfSigned)) $context.Values.ingress.extraTls }}
   tls:
-    {{- if and $context.Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $context.Values.ingress.annotations )) $context.Values.ingress.selfSigned) }}
+    {{- if and $context.Values.ingress.tls (or (include "common.ingress.certManagerRequest" ( dict "annotations" $context.Values.ingress )) $context.Values.ingress.selfSigned) }}
     - hosts:
         - {{ $context.Values.ingress.hostname | quote }}
       secretName: {{ include "common.secrets.tlsSecretName" (dict "context" $context) }}
