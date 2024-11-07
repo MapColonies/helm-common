@@ -211,20 +211,19 @@ This description starts in a new line instead of the same line of description st
 
 ### route parameters
 
-| Name                                      | Description                                                                                                                                                 | Value             |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| `route.enabled`                           | Is route enabled for service                                                                                                                                | `true`            |
-| `route.annotations`                       | Additional custom annotations for route                                                                                                                     | `undefined`       |
-| `route.hostname`                          | Route hostname(DNS)                                                                                                                                         | `""`              |
-| `route.path`                              | Route path                                                                                                                                                  | `/api/heights/v1` |
-| `route.targetPort`                        | Route target port                                                                                                                                           | `8080`            |
-| `route.tls.enabled`                       | Is route SSL enabled                                                                                                                                        | `true`            |
-| `route.tls.useCerts`                      | Is route should use certificates                                                                                                                            | `true`            |
-| `route.tls.termination`                   | Secure routes provide the ability to use several types of TLS termination to serve certificates to the client (edge | passthrough | reencrypt)              | `edge`            |
-| `route.tls.insecureEdgeTerminationPolicy` | Edge-terminated routes can specify policy that enables traffic on insecure schemes (HTTP) to be disabled, (None or empty (for disabled) | Allow | Redirect) | `Redirect`        |
-| `route.extraRules`                        | Custom additional route configurations                                                                                                                      | `{}`              |
-| `route.timeout.enabled`                   | Timeout enabled                                                                                                                                             | `false`           |
-| `route.timeout.duration`                  | Timeout duration. Supported units (us, ms, s, m, h, d)                                                                                                      | `60s`             |
+| Name                                      | Description                                                                                                                                                 | Value       |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `route.enabled`                           | Is route enabled for service                                                                                                                                | `true`      |
+| `route.annotations`                       | Additional custom annotations for route                                                                                                                     | `undefined` |
+| `route.routesMapping`                     | Route routesMapping(DNS)                                                                                                                                    | `[]`        |
+| `route.targetPort`                        | Route target port                                                                                                                                           | `8080`      |
+| `route.tls.enabled`                       | Is route SSL enabled                                                                                                                                        | `true`      |
+| `route.tls.useCerts`                      | Is route should use certificates                                                                                                                            | `true`      |
+| `route.tls.termination`                   | Secure routes provide the ability to use several types of TLS termination to serve certificates to the client (edge | passthrough | reencrypt)              | `edge`      |
+| `route.tls.insecureEdgeTerminationPolicy` | Edge-terminated routes can specify policy that enables traffic on insecure schemes (HTTP) to be disabled, (None or empty (for disabled) | Allow | Redirect) | `Redirect`  |
+| `route.extraRules`                        | Custom additional route configurations                                                                                                                      | `{}`        |
+| `route.timeout.enabled`                   | Timeout enabled                                                                                                                                             | `false`     |
+| `route.timeout.duration`                  | Timeout duration. Supported units (us, ms, s, m, h, d)                                                                                                      | `60s`       |
 
 ### ingress parameters
 

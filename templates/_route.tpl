@@ -1,16 +1,17 @@
 {{/*
 USAGE:
-{{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "context" .) }}
+{{ include "mc-chart.route" (dict "COMPONENT_NAME" $COMPONENT_NAME "ROUTE" $ROUTE "context" .) }}
 */}}
 
 {{- define "mc-chart.route" -}}
 {{- $context := .context -}}
+{{- $ROUTE := .ROUTE -}}
 {{- $COMPONENT_NAME := .COMPONENT_NAME -}}
 {{- if $context.Values.route.enabled }}
 apiVersion: {{ include "common.capabilities.route.apiVersion" $context }}
 kind: Route
 metadata:
-  name: {{ template "common.names.fullname" $context }}
+  name: {{ if $ROUTE.suffix }}{{ template "common.names.fullname" $context }}-{{ $ROUTE.suffix }}{{ else }}{{ template "common.names.fullname" $context }}{{ end }}
   namespace: {{ include "common.names.namespace" $context | quote }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $context.Values.commonLabels "context" $context ) | nindent 4 }}
     app.kubernetes.io/component: {{ $COMPONENT_NAME }}
@@ -23,10 +24,10 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  {{- if $context.Values.route.hostname }}
-  host: {{ $context.Values.route.hostname }}
+  {{- if $ROUTE.hostname }}
+  host: {{ $ROUTE.hostname }}
   {{- end }}
-  path: {{ $context.Values.route.path | default "/"}}
+  path: {{ $ROUTE.path | default "/"}}
   to:
     kind: Service
     name: {{ include "common.names.fullname" $context }}
@@ -43,7 +44,7 @@ spec:
     {{- if $context.Values.route.tls.useCerts }}
     {{- $GLOBAL_TLS_CERTS := include "common.tplvalues.getGlobalObject" (dict "objName" "tlsCertificates" "context" $context) | fromYamlArray -}}
     {{- range $GLOBAL_TLS_CERTS }}
-    {{- if eq .hostname $context.Values.route.hostname }}
+    {{- if eq .hostname $ROUTE.hostname }}
     certificate: {{ .certificate | quote }}
     key: {{ .key | quote }}
     caCertificate: {{ .caCertificate | quote }}

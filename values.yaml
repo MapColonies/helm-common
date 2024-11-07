@@ -474,12 +474,17 @@ route: # @schema title: route ; description: Route configuration https://docs.op
   ##
   annotations: # @schema required: true ; type: [object] ; title: route.annotations ; description: Additional custom annotations for route
     haproxy.router.openshift.io/rewrite-target: / # @schema required: true ; default: "/" ; type: [string] ; title: route.annotations ; description: expcted to be 
-  ## @param route.hostname Route hostname(DNS)
+  ## @param route.routesMapping Route routesMapping(DNS)
+  ## e.g:
+  ## routesMapping:
+  ##  - hostname: www.kuku.com
+  ##    path: /
+  ##    suffix: official
+  ##  - hostname: www.kuku-dr.com
+  ##    path: /
+  ##    suffix: specific
   ##
-  hostname: '' # @schema required: true ; default: "" ; type: [string, null] ; title: route.hostname ; description: Additional custom annotations for route
-  ## @param route.path Route path
-  ##
-  path: /api/heights/v1 # @schema required: true ; default: "/api/YOUR_SERVICE_NAME/YOUR_SERVICE_VER" ; type: [string, null] ; title: route.path ; description: Route path
+  routesMapping: [] # @schema type: [array] ; title: route.routesMapping ; description: routesMapping for routes creation, hostname(s) should be a subset of hostnames used in GLOBAL TLS certificates
   ## @param route.targetPort Route target port 
   ##
   targetPort: 8080 # @schema required: true ; default: "http" ; type: [number, string] ; title: route.targetPort ; description: Route target port
