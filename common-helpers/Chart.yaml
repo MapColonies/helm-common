@@ -1,5 +1,5 @@
 apiVersion: v2
-# Please make sure that version and appVersion are always the same.
+# Please make sure that version and appVersion are always the same
 appVersion: 1.0.0
 description: A Library Helm Chart for grouping common logic between mapcolonies charts. This chart is not deployable by itself.
 keywords:
