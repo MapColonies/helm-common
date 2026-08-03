@@ -1,6 +1,6 @@
 dependencies:
 - name: common-helpers
   repository: file://./common-helpers
-  version: 1.0.1
-digest: sha256:2f3fa4f072360294874aebf53bdfe72b10f8cb7b0207fe3234402a5e2b7d6d4f
-generated: "2024-05-30T11:23:31.7514196+03:00"
+  version: 1.0.2
+digest: sha256:5941961fe70bfb7dc0a8c01093a16ab291030a7ad8089976bee89b7baa535c27
+generated: "2026-08-03T15:38:32.361774795+03:00"
