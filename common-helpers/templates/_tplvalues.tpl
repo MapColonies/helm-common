@@ -64,7 +64,7 @@ Usage:
 {{- define "common.tplvalues.getGlobalValue" -}}
 {{- $context := .context }}
 {{- $propName := .propName }}
-{{- $CURRENT_SUB_CHART := $context.Values.global.currentSubChart -}}
+{{- $CURRENT_SUB_CHART := $context.Values.global.currentSubChart | default "" -}}
 {{- $CHART_GLOBAL_OVERRIDE := dig $CURRENT_SUB_CHART $context.Chart.Name "overrideGlobal" $propName "" $context.Values.global }}
 {{- $UMBRELLA_GLOBAL_OVERRIDE := dig $CURRENT_SUB_CHART "overrideGlobal" $propName "" $context.Values.global }}
 {{- $GLOBAL_OVERRIDE := dig "overrideGlobal" $propName "" $context.Values.global }}
@@ -80,7 +80,7 @@ Get global object according to MapColonies(MC) override principles (see above)
 {{- define "common.tplvalues.getGlobalObject" -}}
 {{- $objName := .objName }}
 {{- $context := .context }}
-{{- $CURRENT_SUB_CHART := $context.Values.global.currentSubChart -}}
+{{- $CURRENT_SUB_CHART := $context.Values.global.currentSubChart | default "" -}}
 {{- $CURRENT_CHART := $context.Chart.Name -}}
 {{- $CHART_GLOBAL_OVERRIDE := include "common.tplvalues.getObject" (dict "path" (printf "%s.%s.%s.%s" $CURRENT_SUB_CHART $CURRENT_CHART "overrideGlobal" $objName) "context" $context.Values.global) -}}
 {{- $UMBRELLA_GLOBAL_OVERRIDE := include "common.tplvalues.getObject" (dict "path" (printf "%s.%s.%s" $CURRENT_SUB_CHART "overrideGlobal" $objName) "context" $context.Values.global) -}}

@@ -4,12 +4,18 @@ SPDX-License-Identifier: APACHE-2.0
 */}}
 
 {{/*
-Return the proper %%MAIN_OBJECT_BLOCK%% image name
+Return the proper %%MAIN_OBJECT_BLOCK%% image name.
+The image tag defaults to "v" + the consuming chart's own version (.Chart.Version) when
+.image.tag is not explicitly set, matching this org's release pipeline, which always
+publishes application images under the raw "v<semver>" git tag (Helm chart versions
+themselves stay unprefixed). This lets charts avoid duplicating their version as a
+values.yaml default. An explicitly set tag (or digest) always wins.
 */}}
 {{- define "tplHelpers.image" -}}
 {{- $MAIN_OBJECT_BLOCK := .MAIN_OBJECT_BLOCK -}}
 {{- $context := .context -}}
-{{- include "common.images.image" (dict "imageRoot" $MAIN_OBJECT_BLOCK.image "global" $context.Values.global) -}}
+{{- $imageRoot := dict "registry" $MAIN_OBJECT_BLOCK.image.registry "repository" $MAIN_OBJECT_BLOCK.image.repository "digest" $MAIN_OBJECT_BLOCK.image.digest "tag" (default (printf "v%s" $context.Chart.Version) $MAIN_OBJECT_BLOCK.image.tag) -}}
+{{- include "common.images.image" (dict "imageRoot" $imageRoot "global" $context.Values.global) -}}
 {{- end -}}
 
 {{/*

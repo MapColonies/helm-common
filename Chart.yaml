@@ -1,6 +1,6 @@
 apiVersion: v2
 # Please make sure that version and appVersion are always the same
-appVersion: 1.0.0
+appVersion: 1.0.2
 description: A Library Helm Chart for grouping common logic between mapcolonies charts. This chart is not deployable by itself.
 keywords:
   - common
@@ -9,8 +9,8 @@ keywords:
   - function
 name: helm-common
 type: library
-version: 1.0.1
+version: 1.0.2
 dependencies:
   - name: common-helpers
-    version: 1.0.1
+    version: 1.0.2
     repository: file://./common-helpers
