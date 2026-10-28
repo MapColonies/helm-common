@@ -55,6 +55,7 @@ spec:
       {{- end }}
       labels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $context ) | nindent 8 }}
         app.kubernetes.io/component: {{ $COMPONENT_NAME }}
+        {{- include "mc.labels.pod" ( dict "context" $context ) | nindent 8 }}
     spec:
       {{- include "tplHelpers.imagePullSecrets" ( dict "MAIN_OBJECT_BLOCK" $MAIN_OBJECT_BLOCK "context" $context ) | nindent 6 }}
       serviceAccountName: {{ template "tplHelpers.serviceAccountName" $context }}

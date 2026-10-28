@@ -197,9 +197,9 @@
                     "description": "In which environment will be performed deployment",
                     "enum": [
                         "development",
+                        "stage",
                         "production",
-                        "test",
-                        "staging"
+                        "qa"
                     ],
                     "title": "environment",
                     "type": "string"
@@ -249,6 +249,22 @@
                     ],
                     "title": "metrics",
                     "type": "object"
+                },
+                "owner": {
+                    "description": "Owning team, rendered as the mapcolonies.io/owner label",
+                    "title": "owner",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "partOf": {
+                    "description": "Logical release grouping, rendered as the mapcolonies.io/part-of label",
+                    "title": "partOf",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "persistences": {
                     "description": "List of Infra PVC that are common for all domains/teams",

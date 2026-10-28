@@ -15,6 +15,14 @@ kubeVersion: # @schema type: [string, null] ; title: kubeVersion ; description: 
 ## @param commonLabels [object] Labels to add for all k8s resources
 ##
 commonLabels:  # @schema required: true ; type: [object, null] ; title: commonLabels ; description: Labels to add for all k8s resources
+## @param mclabels.owner [string] Owning team (mapcolonies.io/owner); overrides global.owner for this chart
+## @param mclabels.partOf [string] Logical release grouping (mapcolonies.io/part-of); overrides global.partOf for this chart
+## @param mclabels.component [string] Component type (mapcolonies.io/component), e.g. frontend or backend
+##
+mclabels: # @schema type: [object, null] ; title: mclabels ; description: MapColonies labels rendered on all resources and Pod templates
+  owner: # @schema type: [string, null] ; title: mclabels.owner ; description: Owning team; overrides global.owner for this chart
+  partOf: # @schema type: [string, null] ; title: mclabels.partOf ; description: Logical release grouping; overrides global.partOf for this chart
+  component: # @schema type: [string, null] ; title: mclabels.component ; description: Component type, e.g. frontend or backend
 ## @param commonAnnotations [object] Annotations to add for all k8s resources
 ##
 commonAnnotations: # @schema required: true ; type: [object, null] ; title: commonAnnotations ; description: Annotations to add for all k8s resources

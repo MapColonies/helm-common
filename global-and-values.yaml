@@ -57,12 +57,18 @@ global: # @schema required: false ; title: .Values.global ; description: These p
     ## @param global.metrics.url traces url
     ##
     url: http://localhost:55681/v1/metrics # @schema required: true ; default: "http://localhost:55681/v1/metrics" ; type: [string] ; title: metrics.url ; description: metrics exposed url 
-  ## @param global.environment In which environment will be performed deployment. Allowed values: "development", "production", "test", "staging"
+  ## @param global.environment In which environment will be performed deployment. Allowed values: "development", "stage", "production", "qa"
   ##
-  environment: development # @schema required: true ; default: "development" ; enum: ["development", "production", "test", "staging"] ; title: environment ; description: In which environment will be performed deployment
+  environment: development # @schema required: true ; default: "development" ; enum: ["development", "stage", "production", "qa"] ; title: environment ; description: In which environment will be performed deployment
   ## @param global.releaseVersion MapColonies release version
   ##
   releaseVersion: 1.20.2 # @schema required: true ; type: [string] ; title: releaseVersion ; description: MapColonies release version
+  ## @param global.owner [string] Owning team, rendered as the mapcolonies.io/owner label (overridable per chart by mclabels.owner)
+  ##
+  owner: # @schema type: [string, null] ; title: owner ; description: Owning team, rendered as the mapcolonies.io/owner label
+  ## @param global.partOf [string] Logical release grouping, rendered as the mapcolonies.io/part-of label (overridable per chart by mclabels.partOf)
+  ##
+  partOf: # @schema type: [string, null] ; title: partOf ; description: Logical release grouping, rendered as the mapcolonies.io/part-of label
   ## @param global.currentSubChart Defines which UMBRELLA is currently in deployment, should be injected by --set flag
   ##
   currentSubChart: DUMMY_currentSubChart # @schema type: [string] ; title: currentSubChart ; description: Defines which UMBRELLA is currently in deployment, should be injected by --set flag
@@ -245,6 +251,14 @@ kubeVersion: # @schema type: [string, null] ; title: kubeVersion ; description: 
 ## @param commonLabels [object] Labels to add for all k8s resources
 ##
 commonLabels:  # @schema required: true ; type: [object, null] ; title: commonLabels ; description: Labels to add for all k8s resources
+## @param mclabels.owner [string] Owning team (mapcolonies.io/owner); overrides global.owner for this chart
+## @param mclabels.partOf [string] Logical release grouping (mapcolonies.io/part-of); overrides global.partOf for this chart
+## @param mclabels.component [string] Component type (mapcolonies.io/component), e.g. frontend or backend
+##
+mclabels: # @schema type: [object, null] ; title: mclabels ; description: MapColonies labels rendered on all resources and Pod templates
+  owner: # @schema type: [string, null] ; title: mclabels.owner ; description: Owning team; overrides global.owner for this chart
+  partOf: # @schema type: [string, null] ; title: mclabels.partOf ; description: Logical release grouping; overrides global.partOf for this chart
+  component: # @schema type: [string, null] ; title: mclabels.component ; description: Component type, e.g. frontend or backend
 ## @param commonAnnotations [object] Annotations to add for all k8s resources
 ##
 commonAnnotations: # @schema required: true ; type: [object, null] ; title: commonAnnotations ; description: Annotations to add for all k8s resources

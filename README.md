@@ -59,8 +59,10 @@ These params are prerequisites and managed by INFRA team per specific network/na
 | `global.tracing.url`                          | traces url                                                                                                        | `http://localhost:55681/v1/traces`                                |
 | `global.metrics.enabled`                      | configuration for metrics collection                                                                              | `false`                                                           |
 | `global.metrics.url`                          | traces url                                                                                                        | `http://localhost:55681/v1/metrics`                               |
-| `global.environment`                          | In which environment will be performed deployment. Allowed values: "development", "production", "test", "staging" | `development`                                                     |
+| `global.environment`                          | In which environment will be performed deployment. Allowed values: "development", "stage", "production", "qa" | `development`                                                     |
 | `global.releaseVersion`                       | MapColonies release version                                                                                       | `1.20.2`                                                          |
+| `global.owner`                                | Owning team, rendered as the mapcolonies.io/owner label (overridable per chart by mclabels.owner)                  | `nil`                                                             |
+| `global.partOf`                               | Logical release grouping, rendered as the mapcolonies.io/part-of label (overridable per chart by mclabels.partOf)  | `nil`                                                             |
 | `global.currentSubChart`                      | Defines which UMBRELLA is currently in deployment, should be injected by --set flag                               | `DUMMY_currentSubChart`                                           |
 | `global.s3.server`                            | s3 server IP/URL                                                                                                  | `******** S3_SERVER(IP/URL) ********`                             |
 | `global.s3.serverPort`                        | s3 server port                                                                                                    | `-9999`                                                           |
@@ -107,6 +109,9 @@ These params are shared between different sections.
 | `fullnameOverride`          | Override fullname                                                        | `""`    |
 | `kubeVersion`               | Kubernetes version                                                       | `""`    |
 | `commonLabels`              | Labels to add for all k8s resources                                      | `{}`    |
+| `mclabels.owner`            | Owning team (mapcolonies.io/owner); overrides global.owner for this chart | `nil`   |
+| `mclabels.partOf`           | Logical release grouping (mapcolonies.io/part-of); overrides global.partOf for this chart | `nil`   |
+| `mclabels.component`        | Component type (mapcolonies.io/component), e.g. frontend or backend      | `nil`   |
 | `commonAnnotations`         | Annotations to add for all k8s resources                                 | `{}`    |
 | `volumePermissions.enabled` | Is initContainers "process" should be included                           | `false` |
 | `persistence.enabled`       | Is initContainers "process" should be included also volumes are defined  | `false` |

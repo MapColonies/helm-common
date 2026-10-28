@@ -1101,6 +1101,40 @@
                 "null"
             ]
         },
+        "mclabels": {
+            "description": "MapColonies labels rendered on all resources and Pod templates",
+            "properties": {
+                "component": {
+                    "description": "Component type, e.g. frontend or backend",
+                    "title": "mclabels.component",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "owner": {
+                    "description": "Owning team; overrides global.owner for this chart",
+                    "title": "mclabels.owner",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "partOf": {
+                    "description": "Logical release grouping; overrides global.partOf for this chart",
+                    "title": "mclabels.partOf",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "mclabels",
+            "type": [
+                "object",
+                "null"
+            ]
+        },
         "nameOverride": {
             "description": "Override Chart name if needed",
             "title": "nameOverride",
