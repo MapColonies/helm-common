@@ -20,8 +20,8 @@ commonLabels:  # @schema required: true ; type: [object, null] ; title: commonLa
 ## @param mclabels.component [string] Component type (mapcolonies.io/component), e.g. frontend or backend
 ##
 mclabels: # @schema type: [object, null] ; title: mclabels ; description: MapColonies labels rendered on all resources and Pod templates
-  owner: # @schema type: [string, null] ; title: mclabels.owner ; description: Owning team; overrides global.owner for this chart
-  partOf: # @schema type: [string, null] ; title: mclabels.partOf ; description: Logical release grouping; overrides global.partOf for this chart
+  owner: # @schema type: [string, null] ; title: mclabels.owner ; description: Owning team, overrides global.owner for this chart
+  partOf: # @schema type: [string, null] ; title: mclabels.partOf ; description: Logical release grouping, overrides global.partOf for this chart
   component: # @schema type: [string, null] ; title: mclabels.component ; description: Component type, e.g. frontend or backend
 ## @param commonAnnotations [object] Annotations to add for all k8s resources
 ##

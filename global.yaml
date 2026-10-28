@@ -35,7 +35,7 @@ global: # @schema required: false ; title: .Values.global ; description: These p
     url: CONFIG-MANAGMENT_URL # @schema required: true ; default: "" ; type: [string] ; title: configManagment.url ; description: configManagment service URL
   ## @param global.imageRegistry Registry URL where docker images are stored
   ## 
-  imageRegistry: YOUR_IMAGE-REGISTRY # @schema required: true ; defdault: "YOUR_IMAGE-REGISTRY" ; type: [string] ; title: imageRegistry ; description: Registry URL where docker images are stored
+  imageRegistry: YOUR_IMAGE-REGISTRY # @schema required: true ; default: "YOUR_IMAGE-REGISTRY" ; type: [string] ; title: imageRegistry ; description: Registry URL where docker images are stored
   ## @param global.imagePullSecrets Registry Pull Secret names
   ## 
   imagePullSecrets: # @schema required: true ; type: [array] ; default: ["YOUR_IMAGE-PULL-SECRET_1"] ; title: imagePullSecrets ; description: Registry Pull Secret names
